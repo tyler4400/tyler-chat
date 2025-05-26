@@ -30,6 +30,7 @@
     "@types/electron-squirrel-startup": "^1.0.2",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
+    "@vitejs/plugin-vue": "^5.2.4",
     "electron": "36.3.1",
     "eslint": "^8.57.1",
     "eslint-plugin-import": "^2.31.0",
@@ -38,6 +39,7 @@
     "vite": "^5.4.19"
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.1"
+    "electron-squirrel-startup": "^1.0.1",
+    "vue": "^3.5.14"
   }
 }
