@@ -5,12 +5,5 @@ import vue from "@vitejs/plugin-vue";
 export default defineConfig({
 	plugins: [
 		vue(),
-		{
-			name: 'tailwind',
-			async configResolved(config) {
-				const tailwindcss = await import('@tailwindcss/vite');
-				config.plugins.push(tailwindcss.default());
-			}
-		}
 	],
 });
