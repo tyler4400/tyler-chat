@@ -12,13 +12,17 @@
           h-[32px] py-[8px] px-[15px]
           "
         >
-          <span>@</span>新建聊天
+          <Icon icon="radix-icons:chat-bubble" class="mr-2" />
+          新建聊天
         </button>
         <button
           class="shadow-sm inline-flex items-center justify-center
           bg-green-50 text-green-700 hover:bg-green-700 border border-green-700 hover:text-white
           h-[32px] py-[8px] px-[15px] text-sm rounded-[4px]"
-        >应用设置</button>
+        >
+          <Icon icon="radix-icons:gear" class="mr-2" />
+          应用设置
+        </button>
       </div>
     </div>
     <div class="h-full flex-1">
@@ -30,6 +34,7 @@
 <script setup lang="ts">
 import ConversationList from "./components/ConversationList.vue";
 import { ConversationProps } from "./types";
+import { Icon } from "@iconify/vue"
 
 console.log('👋 This message is being logged by "App.vue", included via Vite');
 
