@@ -13,6 +13,9 @@ import {
   SelectValue,
   SelectViewport,
 } from 'radix-vue'
+import { ProviderProps } from "../types";
+
+defineProps<{ items: ProviderProps[] }>()
 </script>
 
 <template>
@@ -24,21 +27,16 @@ import {
       <SelectPortal>
         <SelectContent>
           <SelectViewport>
-            <SelectItem value="apple">
-              <SelectItemText>
-                Apple
-              </SelectItemText>
-            </SelectItem>
-            <SelectItem value="banana">
-              <SelectItemText>
-                Banana
-              </SelectItemText>
-            </SelectItem>
-            <SelectItem value="dog">
-              <SelectItemText>
-                Dog
-              </SelectItemText>
-            </SelectItem>
+            <div v-for="provider in items">
+              <SelectLabel>
+                <img :src="provider.avatar" :alt="provider.name">
+              </SelectLabel>
+              <SelectGroup>
+                <SelectItem v-for="(model, index) in provider.models" :key="index" :value="model">
+                  <SelectItemText>{{model}}</SelectItemText>
+                </SelectItem>
+              </SelectGroup>
+            </div>
           </SelectViewport>
         </SelectContent>
       </SelectPortal>
