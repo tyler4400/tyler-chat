@@ -8,9 +8,8 @@
         <button
           class="shadow-sm inline-flex justify-center items-center
           bg-green-700 text-white text-sm hover:bg-green-700/90
-          border-green-700 rounded-[4px]
-          h-[32px] py-[8px] px-[15px]
-          "
+          border-green-700 rounded-[4px] h-[32px] py-[8px] px-[15px]
+          active:bg-green-800 active:translate-y-0.5 active:shadow-inner"
         >
           <Icon icon="radix-icons:chat-bubble" class="mr-2" />
           新建聊天
@@ -18,7 +17,7 @@
         <button
           class="shadow-sm inline-flex items-center justify-center
           bg-green-50 text-green-700 hover:bg-green-700 border border-green-700 hover:text-white
-          h-[32px] py-[8px] px-[15px] text-sm rounded-[4px]"
+          h-[32px] py-[8px] px-[15px] text-sm rounded-[4px] active:bg-green-800 active:translate-y-0.5 active:shadow-inner"
         >
           <Icon icon="radix-icons:gear" class="mr-2" />
           应用设置

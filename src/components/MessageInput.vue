@@ -5,7 +5,7 @@ import { MessageEmits } from "../types";
 const message = defineModel<string>()
 const emits = defineEmits<MessageEmits>()
 const onSend = () => {
-  if (message.value.trim() !== '' ) {
+  if (message.value?.trim() !== '' ) {
     emits('send', message.value)
   }
 }
@@ -25,7 +25,8 @@ const onSend = () => {
     <button
       @click="onSend"
       class="bg-green-700 hover:bg-green-700/90 rounded shadow-sm px-3 py-1.5
-       text-white text-sm inline-flex items-center justify-center gap-2"
+       text-white text-sm inline-flex items-center justify-center gap-2
+        active:bg-green-800 active:translate-y-0.5 active:shadow-inner"
     >
       <Icon icon="radix-icons:paper-plane" class="text-white" />
       发送
