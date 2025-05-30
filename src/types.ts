@@ -17,3 +17,7 @@ export interface ProviderProps {
 	updatedAt: string;
 	models: string[];
 }
+
+export interface MessageEmits {
+	(e: 'send', value: string): void;
+}

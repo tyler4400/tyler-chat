@@ -26,8 +26,13 @@
       </div>
     </div>
     <div class="h-full flex-1 flex items-center">
-      <div class="w-[80%] mx-auto">
-        <ProviderSelect :items="providers" />
+      <div class="w-[80%] h-full mx-auto">
+        <div class="h-[85%] flex items-center">
+          <ProviderSelect v-model="selectModel" :items="providers" />
+        </div>
+        <div class="h-[15%] flex items-start">
+          <MessageInput @send="(text) => console.log(text)" />
+        </div>
       </div>
     </div>
   </div>
@@ -38,6 +43,10 @@ import ConversationList from "./components/ConversationList.vue";
 import { ConversationProps, ProviderProps } from "./types";
 import { Icon } from "@iconify/vue"
 import ProviderSelect from "./components/ProviderSelect.vue";
+import { ref } from "vue";
+import MessageInput from "./components/MessageInput.vue";
+
+const selectModel = ref<string>()
 
 const items: ConversationProps[] = [
   { id: 1, selectedModel: 'GPT-3.5-Turbo', title: '什么是光合作用1', createdAt: '2024-07-03', updatedAt: '2024-07-03', providerId: 1},
