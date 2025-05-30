@@ -14,6 +14,7 @@ import {
   SelectViewport,
 } from 'radix-vue'
 import { ProviderProps } from "../types";
+import { Icon } from "@iconify/vue"
 
 defineProps<{ items: ProviderProps[] }>()
 </script>
@@ -21,29 +22,38 @@ defineProps<{ items: ProviderProps[] }>()
 <template>
   <div class="provider-select">
     <SelectRoot>
-      <SelectTrigger>
+      <SelectTrigger class="flex w-full items-center justify-between rounded-md py-1.5 px-3 shadow-sm border data-[placeholder]:text-gray-400">
         <SelectValue placeholder="Select a model..." />
+        <Icon icon="radix-icons:chevron-down" class="h-5 w-5"/>
       </SelectTrigger>
       <SelectPortal>
-        <SelectContent>
-          <SelectViewport>
-            <div v-for="provider in items">
-              <SelectLabel>
-                <img :src="provider.avatar" :alt="provider.name">
+        <SelectContent class="bg-white shadow-md rounded-md border z-[100]">
+          <SelectViewport class="px-2 py-1">
+            <template v-for="provider in items">
+              <SelectLabel class="flex items-center gap-2 text-gray-500 h-6">
+                <img :src="provider.avatar" :alt="provider.name" class="w-5 h-5 rounded" />
+                {{provider.name}}
               </SelectLabel>
-              <SelectGroup>
-                <SelectItem v-for="(model, index) in provider.models" :key="index" :value="model">
+              <SelectGroup class="pl-5">
+                <SelectItem
+                  v-for="(model, index) in provider.models"
+                  :key="index"
+                  :value="model"
+                  class="outline-none rounded h-7 leading-7 text-green-700 border-t border-t-gray-100
+                    cursor-pointer px-2 flex justify-start gap-2 items-center
+                    data-[state=checked]:bg-green-700 data-[state=checked]:text-white
+                    hover:bg-green-700 hover:text-white"
+                >
+                  <SelectItemIndicator>
+                    <Icon icon="radix-icons:check" class="text-white" />
+                  </SelectItemIndicator>
                   <SelectItemText>{{model}}</SelectItemText>
                 </SelectItem>
               </SelectGroup>
-            </div>
+            </template>
           </SelectViewport>
         </SelectContent>
       </SelectPortal>
     </SelectRoot>
   </div>
 </template>
-
-<style scoped>
-
-</style>
