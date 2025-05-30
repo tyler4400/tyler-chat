@@ -7,17 +7,19 @@ defineProps<{ items: ConversationProps[] }>()
 
 <template>
   <div class="conversation-list">
-    <div
-      class="item border-gray-300 border-t cursor-pointer bg-white hover:bg-green-100 p-2.5"
-      v-for="item in items"
-      :key="item.id"
-    >
-      <div class="flex justify-between items-center text-sm leading-5 text-gray-500">
-        <span>{{item.selectedModel}}</span>
-        <span>{{item.updatedAt}}</span>
+    <RouterLink to="/conversation">
+      <div
+        class="item border-gray-300 border-t cursor-pointer bg-white hover:bg-green-100 p-2.5"
+        v-for="item in items"
+        :key="item.id"
+      >
+        <div class="flex justify-between items-center text-sm leading-5 text-gray-500">
+          <span>{{item.selectedModel}}</span>
+          <span>{{item.updatedAt}}</span>
+        </div>
+        <h2 class="font-semibold leading-5 text-gray-700 truncate">{{item.title}}</h2>
       </div>
-      <h2 class="font-semibold leading-5 text-gray-700 truncate">{{item.title}}</h2>
-    </div>
+    </RouterLink>
   </div>
 </template>
 
