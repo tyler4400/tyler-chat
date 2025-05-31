@@ -2,7 +2,7 @@
   <div class="flex justify-between items-center h-screen">
     <div class="w-[300px] h-full bg-gray-200 text-gray-700 border-r border-gray-300">
       <div class="h-[calc(100%-60px)] overflow-y-auto">
-        <ConversationList :items="items" />
+        <ConversationList :items="conversations" />
       </div>
       <div class="h-[60px] grid grid-cols-2 gap-2 px-2 items-center">
         <RouterLink to="/">
@@ -36,21 +36,7 @@
 
 <script setup lang="ts">
 import ConversationList from "./components/ConversationList.vue";
-import { ConversationProps, ProviderProps } from "./types";
 import { Icon } from "@iconify/vue"
-import ProviderSelect from "./components/ProviderSelect.vue";
-import { ref } from "vue";
-import MessageInput from "./components/MessageInput.vue";
-
-const selectModel = ref<string>()
-
-const items: ConversationProps[] = [
-  { id: 1, selectedModel: 'GPT-3.5-Turbo', title: '什么是光合作用1', createdAt: '2024-07-03', updatedAt: '2024-07-03', providerId: 1},
-  { id: 2, selectedModel: 'GPT-3.5-Turbo', title: '什么是光合作用', createdAt: '2024-07-03', updatedAt: '2024-07-03', providerId: 1},
-  { id: 3, selectedModel: 'GPT-3.5-Turbo', title: '什么是光合作用', createdAt: '2024-07-03', updatedAt: '2024-07-03', providerId: 1},
-  { id: 4, selectedModel: 'GPT-3.5-Turbo', title: '什么是光合作用, 你的说法很请正确，理解的很不错', createdAt: '2024-07-03', updatedAt: '2024-07-03', providerId: 1}
-]
-
-
+import { conversations } from "./components/testData";
 
 </script>
