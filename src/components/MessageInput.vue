@@ -5,7 +5,7 @@ import { MessageEmits } from "../types";
 const message = defineModel<string>()
 const emits = defineEmits<MessageEmits>()
 const onSend = () => {
-  if (message.value?.trim() !== '' ) {
+  if (message.value && message.value?.trim() !== '' ) {
     emits('send', message.value)
   }
 }
