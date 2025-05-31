@@ -21,3 +21,15 @@ export interface ProviderProps {
 export interface MessageEmits {
 	(e: 'send', value: string): void;
 }
+
+export type MessageStatus = 'loading' | 'streaming' | 'finished'
+
+export interface MessageProps {
+	id: number;
+	content: string;
+	type: 'question' | 'answer';
+	conversationId: number;
+	status?: MessageStatus;
+	createdAt: string;
+	updatedAt: string;
+}

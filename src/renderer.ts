@@ -41,7 +41,7 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/settings', component: Settings }
 ]
 const router = createRouter({
-	history: createMemoryHistory(),
+	history: createMemoryHistory('/'), // 默认初始位置
 	routes
 })
 

@@ -3,7 +3,7 @@
     <div class="h-[85%] flex items-center">
       <ProviderSelect v-model="selectedModel" :items="providers" />
     </div>
-    <div class="h-[15%] flex items-start">
+    <div class="h-[15% flex items-start">
       <MessageInput @send="(text) => console.log(text)" />
     </div>
   </div>
