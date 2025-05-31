@@ -6,25 +6,14 @@
       </div>
       <div class="h-[60px] grid grid-cols-2 gap-2 px-2 items-center">
         <RouterLink to="/">
-          <button
-            class="shadow-sm inline-flex justify-center items-center
-            bg-green-700 text-white text-sm hover:bg-green-700/90
-            border-green-700 rounded-[4px] h-[32px] py-[8px] px-[15px]
-            active:bg-green-800 active:translate-y-0.5 active:shadow-inner"
-          >
-            <Icon icon="radix-icons:chat-bubble" class="mr-2" />
+          <Button icon-name="radix-icons:chat-bubble" class="w-full">
             新建聊天
-          </button>
+          </Button>
         </RouterLink>
         <RouterLink to="/settings">
-          <button
-            class="shadow-sm inline-flex items-center justify-center
-            bg-green-50 text-green-700 hover:bg-green-700 border border-green-700 hover:text-white
-            h-[32px] py-[8px] px-[15px] text-sm rounded-[4px] active:bg-green-800 active:translate-y-0.5 active:shadow-inner"
-          >
-            <Icon icon="radix-icons:gear" class="mr-2" />
+          <Button icon-name="radix-icons:gear" plain  class="w-full">
             应用设置
-          </button>
+          </Button>
         </RouterLink>
       </div>
     </div>
@@ -36,7 +25,8 @@
 
 <script setup lang="ts">
 import ConversationList from "./components/ConversationList.vue";
-import { Icon } from "@iconify/vue"
 import { conversations } from "./components/testData";
+import Button from "./components/Button.vue";
+
 
 </script>
