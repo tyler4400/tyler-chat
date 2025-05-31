@@ -1,8 +1,11 @@
 <template>
-  <div class="w-[80%] mx-auto h-[85%] overflow-y-auto pt-2">
+  <div v-if="conversation" class="conversation-header h-[5%] bg-gray-200 flex items-center justify-between border-b border-gray-300 px-2">
+    <h3 class="font-semibold text-gray-900">{{conversation.title}}</h3>
+    <span class="text-sm text-gray-500">{{conversation.updatedAt}}</span>
+  </div>
+  <div class="w-[80%] mx-auto h-[75%] overflow-y-auto pt-2">
      <MessageList :messages="filteredMessages" />
   </div>
-  {{route.params}}
   <div class="w-[80%] mx-auto h-[15%]">
     <MessageInput />
   </div>
@@ -13,11 +16,12 @@ import MessageInput from '../components/MessageInput.vue'
 import MessageList from '../components/MessageList.vue';
 import { MessageProps } from '../types'
 import { useRoute } from "vue-router";
-import { ref, watch } from "vue";
-import { messages } from "../components/testData";
+import { computed, ref, watch } from "vue";
+import { conversations, messages } from "../components/testData";
 
 const route = useRoute()
 const filteredMessages = ref<MessageProps[]>()
+const conversation = computed(() => conversations.find( item => item.id === +route.params.id))
 watch(() => route.params.id, (newId) => {
   filteredMessages.value = messages.filter(message => message.conversationId === +newId)
 })
