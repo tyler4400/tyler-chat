@@ -2,7 +2,7 @@
 import { MessageProps } from "../types";
 import { Icon } from '@iconify/vue'
 
-defineProps<{ messages: MessageProps[] }>()
+defineProps<{ messages?: MessageProps[] }>()
 </script>
 
 <template>
