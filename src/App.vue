@@ -27,6 +27,8 @@
 import ConversationList from "./components/ConversationList.vue";
 import { conversations } from "./components/testData";
 import Button from "./components/Button.vue";
+import { runDB } from "./example/Dexie";
 
+runDB()
 
 </script>
