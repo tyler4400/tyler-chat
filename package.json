@@ -47,7 +47,9 @@
   },
   "dependencies": {
     "@baiducloud/qianfan": "^0.2.3",
+    "dotenv": "^16.5.0",
     "electron-squirrel-startup": "^1.0.1",
+    "openai": "^5.1.0",
     "radix-vue": "^1.9.17",
     "vue": "^3.5.14",
     "vue-router": "^4.5.1"
