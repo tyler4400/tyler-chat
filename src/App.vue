@@ -25,10 +25,14 @@
 
 <script setup lang="ts">
 import ConversationList from "./components/ConversationList.vue";
-import { conversations } from "./components/testData";
 import Button from "./components/Button.vue";
-import { runDB } from "./example/Dexie";
+import { db, initProviders } from "./db";
+import { onMounted, ref } from "vue";
+import { ConversationProps } from "./types";
 
-runDB()
-
+const conversations = ref<ConversationProps[]>([])
+onMounted(async () => {
+  await initProviders();
+  conversations.value = await db.conversations.toArray();
+})
 </script>

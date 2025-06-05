@@ -2,7 +2,7 @@ import { app, BrowserWindow } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 // import { qianfanDemo } from "./example/baidu_qianfan";
-import { aliDemo2 } from "./example/ali_bailian";
+// import { aliDemo2 } from "./example/ali_bailian";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -29,11 +29,11 @@ const createWindow = () => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 
-  try {
-    aliDemo2()
-  } catch (error) {
-    console.log('Demo_error', error)
-  }
+  // try {
+  //   aliDemo2()
+  // } catch (error) {
+  //   console.log('Demo_error', error)
+  // }
 };
 
 // This method will be called when Electron has finished

@@ -6,7 +6,7 @@
   <div class="w-[80%] mx-auto h-[75%] overflow-y-auto pt-2" v-if="filteredMessages?.length">
      <MessageList :messages="filteredMessages" />
   </div>
-  <div class="w-[80%] mx-auto h-[75%] flex justify-center items-center" v-else>
+  <div class="w-[80%] mx-auto h-[80%] flex justify-center items-center" v-else>
     <Icon icon="hugeicons:license-no" width="124" height="124" class="text-gray-300" />
   </div>
   <div class="w-[80%] mx-auto h-[15%]">

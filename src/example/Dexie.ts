@@ -1,9 +1,9 @@
 /* 学习 Dexie.js 的基本用法 */
 import Dexie, { EntityTable } from "dexie";
 import { ProviderProps } from "../types";
-import { providers } from "../components/testData";
+// import { providers } from "../components/testData";
 
-export const db = new Dexie('vChatDatabase') as Dexie & {
+const db = new Dexie('vChatDatabase') as Dexie & {
 	providers: EntityTable<ProviderProps, 'id'>; // primary key "id" (for the typings only)
 }
 db.version(1).stores({
@@ -28,6 +28,6 @@ export const runDB = async () => {
 	// console.log('updatedItem', updatedItem)
 
 	/* 删除数据 */
-	const deletedItem = await db.providers.delete(1)
-	console.log('deletedItem', deletedItem)
+	// const deletedItem = await db.providers.delete(1)
+	// console.log('deletedItem', deletedItem)
 }
