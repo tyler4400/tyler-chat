@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { MessageProps } from "../types";
 import { Icon } from '@iconify/vue'
+import dayjs from "dayjs";
 
 defineProps<{ messages?: MessageProps[] }>()
 </script>
@@ -15,7 +16,7 @@ defineProps<{ messages?: MessageProps[] }>()
     >
       <div>
         <div  class="text-xs text-gray-500" :class="{'text-right': message.type === 'question'}">
-          {{message.createdAt}}
+          {{dayjs(message.createdAt).format('YYYY-MM-DD HH:mm:ss')}}
         </div>
         <div class="message-question bg-green-700 text-white p-2 rounded" v-if="message.type === 'question'">
           {{message.content}}

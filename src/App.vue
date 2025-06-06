@@ -27,12 +27,19 @@
 import ConversationList from "./components/ConversationList.vue";
 import Button from "./components/Button.vue";
 import { db, initProviders } from "./db";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { ConversationProps } from "./types";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
 
 const conversations = ref<ConversationProps[]>([])
 onMounted(async () => {
   await initProviders();
+  conversations.value = await db.conversations.toArray();
+})
+
+watch(route, async (newRoute) => {
   conversations.value = await db.conversations.toArray();
 })
 </script>
