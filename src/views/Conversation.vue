@@ -18,14 +18,14 @@
 import { Icon } from '@iconify/vue'
 import MessageInput from '../components/MessageInput.vue'
 import MessageList from '../components/MessageList.vue';
-import { ConversationProps, CreateChatProps, MessageProps } from '../types'
+import { ConversationProps, CreateChatProps, MessageProps, MessageStatus, UpdatedStreamData } from '../types'
 import { useRoute } from "vue-router";
 import { computed, onMounted, ref, watch } from "vue";
 import { db } from "../db";
 import dayjs from "dayjs";
 
 const route = useRoute()
-const filteredMessages = ref<MessageProps[]>()
+const filteredMessages = ref<MessageProps[]>([])
 const conversation = ref<ConversationProps>()
 
 const conversationId = computed(() => parseInt(route.params.id as string))
@@ -55,7 +55,6 @@ const CreateInitMessage = async () => {
         selectedModel: conversation.value.selectedModel,
         messageId: newMessageId,
       }
-      console.log('startChat', data)
       await window.electronAPI.startChat(data)
     }
   }
@@ -73,5 +72,23 @@ onMounted(async () => {
   if (initMessageId.value) {
     await CreateInitMessage()
   }
+  window.electronAPI.onUpdateMessage(async (streamData: UpdatedStreamData) => {
+    const { messageId, data } = streamData
+    const currentMessage = await db.messages.where({ id: messageId }).first()
+    if (currentMessage) {
+      const { is_end,result } = data
+      const updatedMessage = {
+        content: currentMessage.content + result,
+        updatedAt: new Date().toISOString(),
+        status: is_end ? 'finished' : 'streaming' as MessageStatus,
+      }
+      await db.messages.update(messageId, updatedMessage)
+      const index = filteredMessages.value?.findIndex(item => item.id === messageId)
+      filteredMessages.value.splice(index, 1, {
+        ...currentMessage,
+        ...updatedMessage,
+      })
+    }
+  })
 })
 </script>

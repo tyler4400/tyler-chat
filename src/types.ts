@@ -40,3 +40,12 @@ export interface CreateChatProps {
 	selectedModel: string;
 	messageId: number;
 }
+
+export interface UpdatedStreamData {
+	messageId: number;
+	data: {
+		is_end: boolean; // 大模型的stream是否结束
+		result: string;
+	}
+}
+export type OnUpdatedCallback = (data: UpdatedStreamData) => void;

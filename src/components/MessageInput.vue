@@ -13,8 +13,8 @@ const disabledSend = computed(() => {
 })
 
 const onSend = () => {
-  if (message.value && message.value?.trim() !== '' ) {
-    emits('send', message.value)
+  if (!disabledSend.value) {
+    emits('send', message.value as string)
   }
 }
 </script>
@@ -29,6 +29,7 @@ const onSend = () => {
       v-model="message"
       placeholder="请输入内容"
       class="flex-1 outline-none bg-white focus:ring-0"
+      @keydown.enter="onSend"
     >
     <Button icon-name="radix-icons:paper-plane" @click="onSend" :disabled="disabledSend">
       发送
