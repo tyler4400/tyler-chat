@@ -33,3 +33,10 @@ export interface MessageProps {
 	createdAt: string;
 	updatedAt: string;
 }
+
+export interface CreateChatProps {
+	content: string;
+	providerName: string;
+	selectedModel: string;
+	messageId: number;
+}

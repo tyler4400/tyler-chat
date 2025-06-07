@@ -2,9 +2,16 @@
 import Button from "./Button.vue";
 
 import { MessageEmits } from "../types";
+import { computed } from "vue";
 
+const { disabledInput = false } = defineProps<{  disabledInput?: boolean }>()
 const message = defineModel<string>()
 const emits = defineEmits<MessageEmits>()
+
+const disabledSend = computed(() => {
+  return !message.value || message.value?.trim() === '' || disabledInput
+})
+
 const onSend = () => {
   if (message.value && message.value?.trim() !== '' ) {
     emits('send', message.value)
@@ -23,7 +30,7 @@ const onSend = () => {
       placeholder="请输入内容"
       class="flex-1 outline-none bg-white focus:ring-0"
     >
-    <Button icon-name="radix-icons:paper-plane" @click="onSend">
+    <Button icon-name="radix-icons:paper-plane" @click="onSend" :disabled="disabledSend">
       发送
     </Button>
   </div>

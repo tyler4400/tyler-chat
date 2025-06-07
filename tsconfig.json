@@ -16,5 +16,12 @@
     "lib": ["ESNext", "DOM"],
     "types": ["vite/client", "vue"]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "interface.d.ts",
+    "node_modules/@electron-forge/plugin-vite/forge-vite-env.d.ts"
+  ]
 }
