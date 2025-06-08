@@ -2,7 +2,8 @@
   <div class="flex justify-between items-center h-screen">
     <div class="w-[300px] h-full bg-gray-200 text-gray-700 border-r border-gray-300">
       <div class="h-[calc(100%-60px)] overflow-y-auto">
-        <ConversationList :items="conversations" />
+        <ConversationList :items="conversationStore.conversations" />
+        <h3 class="text-center text-gray-500 text-sm mt-1">共{{conversationStore.totalNumber}}条对话</h3>
       </div>
       <div class="h-[60px] grid grid-cols-2 gap-2 px-2 items-center">
         <RouterLink to="/">
@@ -26,20 +27,14 @@
 <script setup lang="ts">
 import ConversationList from "./components/ConversationList.vue";
 import Button from "./components/Button.vue";
-import { db, initProviders } from "./db";
-import { onMounted, ref, watch } from "vue";
-import { ConversationProps } from "./types";
-import { useRoute } from "vue-router";
+import { initProviders } from "./db";
+import { onMounted } from "vue";
+import { useConversationStore } from "./stores/useConversationStore";
 
-const route = useRoute();
+const conversationStore = useConversationStore()
 
-const conversations = ref<ConversationProps[]>([])
 onMounted(async () => {
   await initProviders();
-  conversations.value = await db.conversations.toArray();
-})
-
-watch(route, async (newRoute) => {
-  conversations.value = await db.conversations.toArray();
+  await conversationStore.fetchConversations()
 })
 </script>

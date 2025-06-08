@@ -33,7 +33,7 @@ import './index.css';
 import Home from "./views/Home.vue";
 import Conversation from "./views/Conversation.vue";
 import Settings from "./views/Settings.vue";
-console.log('👋 This message is being logged by "renderer.ts", included via Vite');
+import { createPinia } from "pinia";
 
 const routes: RouteRecordRaw[] = [
 	{ path: '/', component: Home },
@@ -45,6 +45,12 @@ const router = createRouter({
 	routes
 })
 
+const pinia  = createPinia()
+
 const app = createApp(App)
 app.use(router)
+app.use(pinia)
 app.mount('#app')
+
+
+console.log('👋 This message is being logged by "renderer.ts", included via Vite');

@@ -2,9 +2,11 @@
 import { ConversationProps } from "../types";
 import { useRouter } from "vue-router";
 import dayjs from 'dayjs'
+import { useConversationStore } from "../stores/useConversationStore";
 
 const router = useRouter()
 
+const conversationStore = useConversationStore()
 
 defineProps<{ items: ConversationProps[] }>()
 const goToConversation = (id: number) => {
@@ -16,8 +18,9 @@ const goToConversation = (id: number) => {
 <template>
   <div class="conversation-list">
     <div
-      class="conversation-item border-gray-300 border-t cursor-pointer bg-white hover:bg-green-100 p-2.5"
+      class="conversation-item border-gray-300 border-t cursor-pointer hover:bg-green-100 p-2.5"
       v-for="item in items"
+      :class="conversationStore.selectedId === item.id ? 'bg-green-100' : 'bg-white'"
       :key="item.id"
       @click="goToConversation(item.id)"
     >
