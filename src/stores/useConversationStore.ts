@@ -10,6 +10,8 @@ export const useConversationStore = defineStore('conversation', () => {
 	const conversations = ref<ConversationProps[]>([])
 
 	const selectedId = ref(-1)
+
+	// 动态设置selectedConversationId值。具体做法是watch路由，/conversation/:id路由下动态设置Id， 非/conversation/:id路由将Id设置为-1
 	watchEffect(() => {
 		if (route.path.startsWith('/conversation/') && route.params.id) {
 			selectedId.value = parseInt(route.params.id as string);
@@ -32,12 +34,17 @@ export const useConversationStore = defineStore('conversation', () => {
 		return id
 	}
 
+	const getConversationById = (conversationId: number) => {
+		return conversations.value.find(item => item.id === conversationId)
+	}
+
 	const totalNumber = computed(() => conversations.value.length)
 
 	return {
 		conversations,
 		createConversation,
 		fetchConversations,
+		getConversationById,
 		totalNumber,
 		selectedId,
 	}

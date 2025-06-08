@@ -1,7 +1,7 @@
 <template>
   <div class="w-[80%] h-full mx-auto">
     <div class="h-[85%] flex items-center">
-      <ProviderSelect v-model="currentProvider" :items="providers" />
+      <ProviderSelect v-model="currentProvider" :items="providerStore.providers" />
     </div>
     <div class="h-[15% flex items-start">
       <MessageInput @send="createConversation" :disabled-input="!currentProvider" />
@@ -15,14 +15,14 @@ import { useRouter } from 'vue-router'
 import ProviderSelect from '../components/ProviderSelect.vue'
 import MessageInput from '../components/MessageInput.vue'
 import { db } from "../db";
-import { ProviderProps } from "../types";
+import { useConversationStore } from "../stores/useConversationStore";
+import { useProviderStore } from "../stores/useProviderStore";
 
 const router = useRouter()
 
-const providers = ref<ProviderProps[]>([])
-onMounted(async () => {
-  providers.value = await db.providers.toArray()
-})
+const conversationStore = useConversationStore()
+const providerStore = useProviderStore()
+
 const currentProvider = ref<string>('')
 const modelInfo = computed(() => {
   const [ providerId, selectedModel ] = currentProvider.value.split('/')
@@ -33,20 +33,17 @@ const modelInfo = computed(() => {
 })
 const createConversation = async (content: string) => {
   const { providerId, selectedModel } = modelInfo.value
-  // todo 校验是否选择模型
-  const currentDate = new Date().toISOString()
-  const conversationId = await db.conversations.add({
+
+  const conversationId = await conversationStore.createConversation({
     title: content,
     providerId,
     selectedModel,
-    createdAt: currentDate,
-    updatedAt: currentDate,
   })
   const newMessageId = await db.messages.add({
     content,
     conversationId,
-    createdAt: currentDate,
-    updatedAt: currentDate,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     type: 'question'
   })
   await router.push(`/conversation/${conversationId}?init=${newMessageId}`) // t通过init来判断是否是新建对话

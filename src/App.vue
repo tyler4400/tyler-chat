@@ -27,14 +27,15 @@
 <script setup lang="ts">
 import ConversationList from "./components/ConversationList.vue";
 import Button from "./components/Button.vue";
-import { initProviders } from "./db";
 import { onMounted } from "vue";
 import { useConversationStore } from "./stores/useConversationStore";
+import { useProviderStore } from "./stores/useProviderStore";
 
 const conversationStore = useConversationStore()
+const providerStore = useProviderStore()
 
 onMounted(async () => {
-  await initProviders();
+  await providerStore.init()
   await conversationStore.fetchConversations()
 })
 </script>
