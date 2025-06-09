@@ -28,7 +28,7 @@ defineProps<{ messages?: MessageProps[] }>()
           </template>
           <template v-if="message.status === 'error'">
             <div class="inline-flex items-center gap-2">
-              <Icon icon="codicon:error" />
+              <Icon icon="codicon:error" class="text-red-700" />
               {{message.content}}
             </div>
           </template>

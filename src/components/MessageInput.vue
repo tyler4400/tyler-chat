@@ -3,18 +3,22 @@ import Button from "./Button.vue";
 
 import { MessageEmits } from "../types";
 import { computed } from "vue";
+import { useLoadingMsgStore } from "../stores/useLoadingMsgStore";
 
 const { disabledInput = false } = defineProps<{  disabledInput?: boolean }>()
 const message = defineModel<string>()
 const emits = defineEmits<MessageEmits>()
 
+const loadingMsgStore = useLoadingMsgStore()
+
 const disabledSend = computed(() => {
-  return !message.value || message.value?.trim() === '' || disabledInput
+  return !message.value || message.value?.trim() === '' || loadingMsgStore.isLoading || disabledInput
 })
 
 const onSend = () => {
   if (!disabledSend.value) {
     emits('send', message.value as string)
+    message.value = ''
   }
 }
 </script>

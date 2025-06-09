@@ -1,10 +1,11 @@
 import { Ref, ref, watch } from "vue";
 import { MessageProps, UpdatedStreamData, UpdatedStreamError } from "../types";
 import { db } from "../db";
-
+import { useLoadingMsgStore } from "../stores/useLoadingMsgStore";
 
 export const useMessage = (conversationId: Ref<number>) => {
 	const messages = ref<MessageProps[]>([])
+	const loadingMsgStore = useLoadingMsgStore()
 
 	const fetchMessages = async () => {
 		messages.value = await db.messages.where({ conversationId: conversationId.value }).toArray()
@@ -40,6 +41,7 @@ export const useMessage = (conversationId: Ref<number>) => {
 					...updatedMessage,
 				})
 			}
+			loadingMsgStore.setLoading(false)
 		} else {
 			const { messageId, data } = message
 			const currentMessage = await db.messages.where({ id: messageId }).first()
@@ -56,6 +58,7 @@ export const useMessage = (conversationId: Ref<number>) => {
 				  ...currentMessage,
 				  ...updatedMessage,
 				})
+				if (is_end) loadingMsgStore.setLoading(false)
 			}
 		}
 	}

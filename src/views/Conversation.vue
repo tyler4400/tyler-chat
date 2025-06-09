@@ -10,7 +10,7 @@
     <Icon icon="hugeicons:license-no" width="124" height="124" class="text-gray-300" />
   </div>
   <div class="w-[80%] mx-auto h-[15%]">
-    <MessageInput />
+    <MessageInput @send="askNewQuestion" />
   </div>
 </template>
 
@@ -25,11 +25,13 @@ import dayjs from "dayjs";
 import { useMessage } from "../hooks/useMessage";
 import { useConversationStore } from "../stores/useConversationStore";
 import { useProviderStore } from "../stores/useProviderStore";
+import { useLoadingMsgStore } from "../stores/useLoadingMsgStore";
 
 const route = useRoute()
 const initMessageId = computed(() => parseInt(route.query.init as string))
 const conversationId = computed(() => parseInt(route.params.id as string))
 
+const loadingMsgStore = useLoadingMsgStore()
 const providerStore = useProviderStore()
 const conversationStore = useConversationStore()
 const currentConversation = computed(() => conversationStore.getConversationById(conversationId.value))
@@ -44,8 +46,9 @@ const sentMessages = computed(() => messages.value
     }))
 )
 
-const CreateInitMessage = async () => {
+const getAnswerMsg = async () => {
   // step1 先创建一条空的loading信息
+  loadingMsgStore.setLoading(true)
   const newMessageId = await createMessage({
     content: '',
     type: 'answer',
@@ -68,9 +71,18 @@ const CreateInitMessage = async () => {
   }
 }
 
+const askNewQuestion = async (question: string) => {
+  await createMessage({
+    content: question,
+    type: 'question',
+    conversationId: conversationId.value,
+  })
+  await getAnswerMsg()
+}
+
 onMounted(async () => {
   if (initMessageId.value) {
-    await CreateInitMessage()
+    await getAnswerMsg()
   }
   window.electronAPI.onUpdateMessage(updateStreamMessage)
 })
