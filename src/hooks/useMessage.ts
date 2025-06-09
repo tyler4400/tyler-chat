@@ -1,5 +1,5 @@
 import { Ref, ref, watch } from "vue";
-import { MessageProps, UpdatedStreamData } from "../types";
+import { MessageProps, UpdatedStreamData, UpdatedStreamError } from "../types";
 import { db } from "../db";
 
 
@@ -22,23 +22,42 @@ export const useMessage = (conversationId: Ref<number>) => {
 		return id
 	}
 
-	const updateStreamMessage = async (message: UpdatedStreamData) => {
-		const { messageId, data } = message
-		const currentMessage = await db.messages.where({ id: messageId }).first()
-		 if (currentMessage) {
-			 const { is_end, result } = data
-			 const updatedMessage: Partial<MessageProps> = {
-				 content: currentMessage.content + result,
-				 updatedAt: new Date().toISOString(),
-				 status: is_end ? 'finished' : 'streaming',
-			 }
-			 await db.messages.update(messageId, updatedMessage)
-			 const index = messages.value?.findIndex(item => item.id === messageId)
-			 messages.value.splice(index, 1, {
-				 ...currentMessage,
-				 ...updatedMessage,
-			 })
-		 }
+	const updateStreamMessage = async (message: UpdatedStreamData | UpdatedStreamError) => {
+		console.log('updateStreamMessage', message)
+		if ('errorMsg' in message) {
+			const { messageId, errorMsg } = message
+			const currentMessage = await db.messages.where({ id: messageId }).first()
+			if (currentMessage) {
+				const updatedMessage: Partial<MessageProps> = {
+					content: errorMsg,
+					updatedAt: new Date().toISOString(),
+					status: 'error',
+				}
+				await db.messages.update(messageId, updatedMessage)
+				const index = messages.value?.findIndex(item => item.id === messageId)
+				messages.value.splice(index, 1, {
+					...currentMessage,
+					...updatedMessage,
+				})
+			}
+		} else {
+			const { messageId, data } = message
+			const currentMessage = await db.messages.where({ id: messageId }).first()
+			if (currentMessage) {
+				const { is_end, result } = data
+				const updatedMessage: Partial<MessageProps> = {
+				  content: currentMessage.content + result,
+				  updatedAt: new Date().toISOString(),
+				  status: is_end ? 'finished' : 'streaming',
+				}
+				await db.messages.update(messageId, updatedMessage)
+				const index = messages.value?.findIndex(item => item.id === messageId)
+				messages.value.splice(index, 1, {
+				  ...currentMessage,
+				  ...updatedMessage,
+				})
+			}
+		}
 	}
 
 	return {

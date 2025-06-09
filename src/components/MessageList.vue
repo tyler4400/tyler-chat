@@ -18,13 +18,19 @@ defineProps<{ messages?: MessageProps[] }>()
         <div  class="text-xs text-gray-500" :class="{'text-right': message.type === 'question'}">
           {{dayjs(message.createdAt).format('YYYY-MM-DD HH:mm:ss')}}
         </div>
+
         <div class="message-question bg-green-700 text-white p-2 rounded" v-if="message.type === 'question'">
           {{message.content}}
         </div>
-
         <div class="message-answer bg-gray-200 text-gray-700 p-2 rounded inline-block" v-else>
           <template v-if="message.status === 'loading'">
             <Icon icon="eos-icons:three-dots-loading" />
+          </template>
+          <template v-if="message.status === 'error'">
+            <div class="inline-flex items-center gap-2">
+              <Icon icon="codicon:error" />
+              {{message.content}}
+            </div>
           </template>
           <template v-else>
             {{message.content}}

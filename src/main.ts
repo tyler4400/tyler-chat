@@ -48,7 +48,6 @@ const createWindow = () => {
         )) as AsyncIterable<RespBase>
 
         for await (const chunk of stream) {
-          if (mainWindow.isDestroyed()) break
           const { is_end, result } = chunk
           const content = {
             messageId,
@@ -68,7 +67,6 @@ const createWindow = () => {
         })
 
         for await (const chunk of stream) {
-          if (mainWindow.isDestroyed()) break
           const choice = chunk.choices[0]
           const content = {
             messageId,
@@ -79,15 +77,15 @@ const createWindow = () => {
           }
           mainWindow.webContents.send('update-message', content)
         }
+      } else {
+        throw new Error('Provider not supported')
       }
     } catch (error) {
       console.error('Error in chat stream:', error)
-      if (!mainWindow.isDestroyed()) {
-        mainWindow.webContents.send('chat-error', {
-          messageId,
-          error: error.message,
-        })
-      }
+      mainWindow.webContents.send('update-message', {
+        messageId,
+        errorMsg: error.message,
+      })
     }
   })
 

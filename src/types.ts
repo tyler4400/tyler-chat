@@ -22,7 +22,7 @@ export interface MessageEmits {
 	(e: 'send', value: string): void;
 }
 
-export type MessageStatus = 'loading' | 'streaming' | 'finished'
+export type MessageStatus = 'loading' | 'streaming' | 'finished' | 'error'
 
 export interface MessageProps {
 	id: number;
@@ -48,4 +48,9 @@ export interface UpdatedStreamData {
 		result: string;
 	}
 }
-export type OnUpdatedCallback = (data: UpdatedStreamData) => void;
+
+export interface UpdatedStreamError {
+	messageId: number;
+	errorMsg: string;
+}
+export type OnUpdatedCallback = (data: UpdatedStreamData | UpdatedStreamError) => void;
