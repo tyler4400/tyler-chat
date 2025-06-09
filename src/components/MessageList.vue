@@ -2,6 +2,7 @@
 import { MessageProps } from "../types";
 import { Icon } from '@iconify/vue'
 import dayjs from "dayjs";
+import VueMarkdown from "vue-markdown-render";
 
 defineProps<{ messages?: MessageProps[] }>()
 </script>
@@ -32,9 +33,9 @@ defineProps<{ messages?: MessageProps[] }>()
               {{message.content}}
             </div>
           </template>
-          <template v-else>
-            {{message.content}}
-          </template>
+          <div class="prose prose-slate prose-headings:my-1 prose-li:my-0 prose-ul:my-1 prose-p:my-1" v-else>
+            <VueMarkdown :source="message.content" />
+          </div>
         </div>
       </div>
     </div>

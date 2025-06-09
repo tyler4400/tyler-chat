@@ -4,6 +4,7 @@ import Button from "./Button.vue";
 import { MessageEmits } from "../types";
 import { computed } from "vue";
 import { useLoadingMsgStore } from "../stores/useLoadingMsgStore";
+import { Icon } from '@iconify/vue'
 
 const { disabledInput = false } = defineProps<{  disabledInput?: boolean }>()
 const message = defineModel<string>()
@@ -28,6 +29,7 @@ const onSend = () => {
     border shadow-md rounded py-1.5 px-2 gap-2
     data-[placeholder]:text-gray-400"
   >
+    <Icon class="text-green-700 cursor-pointer" icon="lets-icons:img-box-fill" width="24" height="24" />
     <input
       type="text"
       v-model="message"
