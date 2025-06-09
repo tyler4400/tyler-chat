@@ -30,6 +30,7 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import { createRouter, createMemoryHistory, RouteRecordRaw } from 'vue-router';
 import './index.css';
+import 'highlight.js/styles/github-dark.min.css'
 import Home from "./views/Home.vue";
 import Conversation from "./views/Conversation.vue";
 import Settings from "./views/Settings.vue";
