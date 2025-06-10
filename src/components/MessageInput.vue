@@ -18,6 +18,7 @@ const disabledSend = computed(() => {
 
 const onSend = () => {
   if (!disabledSend.value) {
+    loadingMsgStore.setEnableAutoScroll(true)
     emits('send', message.value as string)
     message.value = ''
   }
@@ -37,8 +38,8 @@ const onSend = () => {
       class="flex-1 outline-none bg-white focus:ring-0"
       @keydown.enter="onSend"
     >
-    <Button icon-name="radix-icons:paper-plane" @click="onSend" :disabled="disabledSend">
-      发送
+    <Button icon-name="radix-icons:paper-plane" @click="onSend" :loading="loadingMsgStore.isLoading" :disabled="disabledSend">
+      {{loadingMsgStore.isLoading ? '接收中' : '发送'}}
     </Button>
   </div>
 </template>

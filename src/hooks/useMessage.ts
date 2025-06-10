@@ -24,7 +24,7 @@ export const useMessage = (conversationId: Ref<number>) => {
 	}
 
 	const updateStreamMessage = async (message: UpdatedStreamData | UpdatedStreamError) => {
-		console.log('updateStreamMessage', message)
+		// console.log('updateStreamMessage', message)
 		if ('errorMsg' in message) {
 			const { messageId, errorMsg } = message
 			const currentMessage = await db.messages.where({ id: messageId }).first()

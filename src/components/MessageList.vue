@@ -12,14 +12,26 @@ defineProps<{ messages?: MessageProps[] }>()
 defineExpose<MessageListInstance>({
   scrollIntoView: () => {
     if (listRef.value) {
-      console.log('clientHeight', listRef.value.clientHeight)
-      console.log('offsetHeight', listRef.value.offsetHeight)
-      console.log('scrollHeight', listRef.value.scrollHeight)
       listRef.value.scrollIntoView({ behavior: 'smooth', block: 'end' })
       /**
        * 滚动到试图中还有两种优化方法
        * 1. 判断message-list的clientHeight和scrollHeight
-       * 2. 在底部设置一个不可见元素， 监控它的mutationObsever，超出屏幕就让起滚动出现
+       * 2. 在底部设置一个不可见元素， 监控它的IntersectionObserver，超出屏幕就让起滚动出现
+       *
+       *     if (listRef.value && observerRef.value) {
+       *       const observer = new IntersectionObserver((entries) => {
+       *         // 当观察元素不可见时（超出可视区域）
+       *         if (!entries[0].isIntersecting) {
+       *           console.log('scrollIntoView')
+       *           listRef.value?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+       *         }
+       *       }, {
+       *         root: listRef.value.parentElement, // 指定观察的容器
+       *         threshold: 0 // 只要有一点不可见就触发
+       *       })
+       *
+       *       observer.observe(observerRef.value)
+       *     }
        * */
     }
   }

@@ -3,7 +3,7 @@
     <h3 class="font-semibold text-gray-900">{{currentConversation.title}}</h3>
     <span class="text-sm text-gray-500">{{dayjs(currentConversation.updatedAt).format('YYYY-MM-DD HH:mm:ss')}}</span>
   </div>
-  <div class="w-full mx-auto h-[80%] overflow-y-auto pt-2 px-6" v-if="messages.length">
+  <div class="w-full mx-auto h-[80%] overflow-y-auto pt-2 px-6" v-if="messages.length" @wheel="takeoverScroll">
      <MessageList ref="messageListRef" :messages="messages" />
   </div>
   <div class="w-[80%] mx-auto h-[80%] flex justify-center items-center" v-else>
@@ -19,7 +19,7 @@ import { Icon } from '@iconify/vue'
 import MessageInput from '../components/MessageInput.vue'
 import MessageList from '../components/MessageList.vue';
 import { CreateChatProps, MessageListInstance } from '../types'
-import { useRoute } from "vue-router";
+import { useRoute, onBeforeRouteUpdate } from "vue-router";
 import { computed, nextTick, onMounted, useTemplateRef, watch } from "vue";
 import dayjs from "dayjs";
 import { useMessage } from "../hooks/useMessage";
@@ -90,9 +90,19 @@ onMounted(async () => {
 })
 
 watch(messages, async () => {
+  if (!loadingMsgStore.enableAutoScroll) return
   await nextTick()
   if (messageListRef.value) {
     messageListRef.value.scrollIntoView()
   }
 }, { deep: 1, immediate: true })
+
+// 监听用户滚动事件
+const takeoverScroll = () => {
+  loadingMsgStore.setEnableAutoScroll(false)
+}
+
+onBeforeRouteUpdate(() => {
+  loadingMsgStore.setEnableAutoScroll(true)
+})
 </script>
