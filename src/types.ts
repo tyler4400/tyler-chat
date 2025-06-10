@@ -22,6 +22,10 @@ export interface MessageEmits {
 	(e: 'send', value: string): void;
 }
 
+export interface MessageListInstance {
+	scrollIntoView: () => void;
+}
+
 export type MessageStatus = 'loading' | 'streaming' | 'finished' | 'error'
 
 export interface MessageProps {

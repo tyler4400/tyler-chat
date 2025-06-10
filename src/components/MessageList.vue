@@ -1,15 +1,33 @@
 <script setup lang="ts">
-import { MessageProps } from "../types";
+import { MessageListInstance, MessageProps } from "../types";
 import { Icon } from '@iconify/vue'
 import dayjs from "dayjs";
 import VueMarkdown from "vue-markdown-render";
 import markdownItHighlightjs from "markdown-it-highlightjs";
+import { useTemplateRef } from "vue";
 
+const listRef = useTemplateRef<HTMLDivElement>('listRef')
 defineProps<{ messages?: MessageProps[] }>()
+
+defineExpose<MessageListInstance>({
+  scrollIntoView: () => {
+    if (listRef.value) {
+      console.log('clientHeight', listRef.value.clientHeight)
+      console.log('offsetHeight', listRef.value.offsetHeight)
+      console.log('scrollHeight', listRef.value.scrollHeight)
+      listRef.value.scrollIntoView({ behavior: 'smooth', block: 'end' })
+      /**
+       * 滚动到试图中还有两种优化方法
+       * 1. 判断message-list的clientHeight和scrollHeight
+       * 2. 在底部设置一个不可见元素， 监控它的mutationObsever，超出屏幕就让起滚动出现
+       * */
+    }
+  }
+})
 </script>
 
 <template>
-  <div class="message-list">
+  <div class="message-list" ref="listRef">
     <div
       v-for="message in messages"
       :key="message.id"

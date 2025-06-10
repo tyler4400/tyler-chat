@@ -12,7 +12,6 @@ const loadingMsgStore = useLoadingMsgStore()
 
 defineProps<{ items: ConversationProps[] }>()
 const goToConversation = (id: number) => {
-  console.log(id)
   if (loadingMsgStore.isLoading) {
     alert('AI正在回复中，现在切换将导致数据丢失')
     return

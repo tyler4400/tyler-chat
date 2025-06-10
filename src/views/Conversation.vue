@@ -4,12 +4,12 @@
     <span class="text-sm text-gray-500">{{dayjs(currentConversation.updatedAt).format('YYYY-MM-DD HH:mm:ss')}}</span>
   </div>
   <div class="w-full mx-auto h-[80%] overflow-y-auto pt-2 px-6" v-if="messages.length">
-     <MessageList :messages="messages" />
+     <MessageList ref="messageListRef" :messages="messages" />
   </div>
   <div class="w-[80%] mx-auto h-[80%] flex justify-center items-center" v-else>
     <Icon icon="hugeicons:license-no" width="124" height="124" class="text-gray-300" />
   </div>
-  <div class="w-[80%] mx-auto h-[15%]">
+  <div class="w-[80%] mx-auto h-[15%] pt-2">
     <MessageInput @send="askNewQuestion" />
   </div>
 </template>
@@ -18,14 +18,16 @@
 import { Icon } from '@iconify/vue'
 import MessageInput from '../components/MessageInput.vue'
 import MessageList from '../components/MessageList.vue';
-import { CreateChatProps } from '../types'
+import { CreateChatProps, MessageListInstance } from '../types'
 import { useRoute } from "vue-router";
-import { computed, onMounted } from "vue";
+import { computed, nextTick, onMounted, useTemplateRef, watch } from "vue";
 import dayjs from "dayjs";
 import { useMessage } from "../hooks/useMessage";
 import { useConversationStore } from "../stores/useConversationStore";
 import { useProviderStore } from "../stores/useProviderStore";
 import { useLoadingMsgStore } from "../stores/useLoadingMsgStore";
+
+const messageListRef = useTemplateRef<MessageListInstance>('messageListRef')
 
 const route = useRoute()
 const initMessageId = computed(() => parseInt(route.query.init as string))
@@ -86,4 +88,11 @@ onMounted(async () => {
   }
   window.electronAPI.onUpdateMessage(updateStreamMessage)
 })
+
+watch(messages, async () => {
+  await nextTick()
+  if (messageListRef.value) {
+    messageListRef.value.scrollIntoView()
+  }
+}, { deep: 1, immediate: true })
 </script>
