@@ -5,7 +5,6 @@ import dayjs from "dayjs";
 import VueMarkdown from "vue-markdown-render";
 import markdownItHighlightjs from "markdown-it-highlightjs";
 
-
 defineProps<{ messages?: MessageProps[] }>()
 </script>
 
@@ -35,7 +34,9 @@ defineProps<{ messages?: MessageProps[] }>()
               {{message.content}}
             </div>
           </template>
-          <div class="prose prose-slate prose-headings:my-1 prose-li:my-0 prose-ul:my-1 prose-p:my-1 prose-hr:my-0" v-else>
+          <div class="prose prose-slate prose-headings:my-1
+            prose-li:my-0 prose-ul:my-1 prose-p:my-1 prose-hr:my-0
+            prose-pre:p-0 prose-pre:m-0" v-else>
             <VueMarkdown :source="message.content" :plugins="[markdownItHighlightjs]" />
           </div>
         </div>

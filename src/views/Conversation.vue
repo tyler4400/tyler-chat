@@ -3,7 +3,7 @@
     <h3 class="font-semibold text-gray-900">{{currentConversation.title}}</h3>
     <span class="text-sm text-gray-500">{{dayjs(currentConversation.updatedAt).format('YYYY-MM-DD HH:mm:ss')}}</span>
   </div>
-  <div class="w-[80%] mx-auto h-[80%] overflow-y-auto pt-2" v-if="messages.length">
+  <div class="w-full mx-auto h-[80%] overflow-y-auto pt-2 px-4" v-if="messages.length">
      <MessageList :messages="messages" />
   </div>
   <div class="w-[80%] mx-auto h-[80%] flex justify-center items-center" v-else>
@@ -66,7 +66,7 @@ const getAnswerMsg = async () => {
         selectedModel: currentConversation.value.selectedModel,
         messageId: newMessageId,
       }
-      await window.electronAPI.startChat(data)
+      window.electronAPI.startChat(data)
     }
   }
 }
