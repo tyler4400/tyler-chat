@@ -8,14 +8,8 @@ export const useLoadingMsgStore = defineStore('loadingMsg', () => {
 		isLoading.value = value
 	}
 
-	const enableAutoScroll = ref<boolean>(true)
-	const setEnableAutoScroll = (value: boolean) => {
-		enableAutoScroll.value = value
-	}
 	return {
 		isLoading,
 		setLoading,
-		enableAutoScroll,
-		setEnableAutoScroll,
 	}
 })

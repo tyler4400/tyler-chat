@@ -20,7 +20,7 @@ import MessageInput from '../components/MessageInput.vue'
 import MessageList from '../components/MessageList.vue';
 import { CreateChatProps, MessageListInstance } from '../types'
 import { useRoute, onBeforeRouteUpdate } from "vue-router";
-import { computed, nextTick, onMounted, useTemplateRef, watch } from "vue";
+import { computed, nextTick, onMounted, ref, useTemplateRef, watch } from "vue";
 import dayjs from "dayjs";
 import { useMessage } from "../hooks/useMessage";
 import { useConversationStore } from "../stores/useConversationStore";
@@ -32,6 +32,8 @@ const messageListRef = useTemplateRef<MessageListInstance>('messageListRef')
 const route = useRoute()
 const initMessageId = computed(() => parseInt(route.query.init as string))
 const conversationId = computed(() => parseInt(route.params.id as string))
+
+const enableAutoScroll = ref<boolean>(true)
 
 const loadingMsgStore = useLoadingMsgStore()
 const providerStore = useProviderStore()
@@ -49,6 +51,7 @@ const sentMessages = computed(() => messages.value
 )
 
 const getAnswerMsg = async () => {
+  enableAutoScroll.value = true
   // step1 先创建一条空的loading信息
   loadingMsgStore.setLoading(true)
   const newMessageId = await createMessage({
@@ -90,7 +93,7 @@ onMounted(async () => {
 })
 
 watch(messages, async () => {
-  if (!loadingMsgStore.enableAutoScroll) return
+  if (!enableAutoScroll.value) return
   await nextTick()
   if (messageListRef.value) {
     messageListRef.value.scrollIntoView()
@@ -99,10 +102,10 @@ watch(messages, async () => {
 
 // 监听用户滚动事件
 const takeoverScroll = () => {
-  loadingMsgStore.setEnableAutoScroll(false)
+  enableAutoScroll.value = false
 }
 
 onBeforeRouteUpdate(() => {
-  loadingMsgStore.setEnableAutoScroll(true)
+  enableAutoScroll.value = true
 })
 </script>

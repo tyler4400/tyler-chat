@@ -18,7 +18,6 @@ const disabledSend = computed(() => {
 
 const onSend = () => {
   if (!disabledSend.value) {
-    loadingMsgStore.setEnableAutoScroll(true)
     emits('send', message.value as string)
     message.value = ''
   }
