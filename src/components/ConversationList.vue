@@ -27,7 +27,7 @@ const goToConversation = (id: number) => {
       v-for="item in items"
       :class="conversationStore.selectedId === item.id ? 'bg-green-100' : 'bg-white'"
       :key="item.id"
-      @click="goToConversation(item.id)"
+      @click="() => goToConversation(item.id)"
     >
       <div class="flex justify-between items-center text-sm leading-5 text-gray-500">
         <span>{{item.selectedModel}}</span>
