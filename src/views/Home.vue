@@ -14,7 +14,6 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import ProviderSelect from '../components/ProviderSelect.vue'
 import MessageInput from '../components/MessageInput.vue'
-import { db } from "../db";
 import { useConversationStore } from "../stores/useConversationStore";
 import { useProviderStore } from "../stores/useProviderStore";
 
@@ -31,7 +30,7 @@ const modelInfo = computed(() => {
     selectedModel
   }
 })
-const createConversation = async (content: string) => {
+const createConversation = async (content: string, imagePath?: string) => {
   const { providerId, selectedModel } = modelInfo.value
 
   const conversationId = await conversationStore.createConversation({
@@ -39,12 +38,13 @@ const createConversation = async (content: string) => {
     providerId,
     selectedModel,
   })
-  const newMessageId = await db.messages.add({
+  const newMessageId = await conversationStore.addNewMessage({
     content,
     conversationId,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    type: 'question'
+    type: 'question',
+    ...(imagePath && { imagePath })
   })
   await router.push(`/conversation/${conversationId}?init=${newMessageId}`) // t通过init来判断是否是新建对话
 }

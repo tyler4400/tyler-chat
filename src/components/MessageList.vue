@@ -53,6 +53,7 @@ defineExpose<MessageListInstance>({
 
         <div class="message-question bg-green-700 text-white p-2 rounded" v-if="message.type === 'question'">
           {{message.content}}
+          <img v-if="message.imagePath" :src="`tyler-file://${message.imagePath}`" alt="Message image" class="w-32 object-cover rounded block">
         </div>
         <div class="message-answer bg-gray-200 text-gray-700 p-2 rounded inline-block" v-else>
           <template v-if="message.status === 'loading'">
@@ -60,11 +61,11 @@ defineExpose<MessageListInstance>({
           </template>
           <template v-if="message.status === 'error'">
             <div class="inline-flex items-center gap-2">
-              <Icon icon="codicon:error" class="text-red-700" />
+              <Icon icon="codicon:error" class="text-red-700 w-10" />
               {{message.content}}
             </div>
           </template>
-          <div class="prose prose-slate prose-headings:my-1
+          <div class="prose prose-slate prose-headings:my-1 prose-h3:text-lg
             prose-li:my-0 prose-ul:my-1 prose-p:my-1 prose-hr:my-0
             prose-pre:p-0 prose-pre:m-0" v-else>
             <VueMarkdown :source="message.content" :plugins="[markdownItHighlightjs]" />

@@ -18,7 +18,7 @@
 import { Icon } from '@iconify/vue'
 import MessageInput from '../components/MessageInput.vue'
 import MessageList from '../components/MessageList.vue';
-import { CreateChatProps, MessageListInstance } from '../types'
+import { CreateChatProps, MessageListInstance, SendMsg } from '../types'
 import { useRoute, onBeforeRouteUpdate } from "vue-router";
 import { computed, nextTick, onMounted, ref, useTemplateRef, watch } from "vue";
 import dayjs from "dayjs";
@@ -42,11 +42,12 @@ const currentConversation = computed(() => conversationStore.getConversationById
 
 const { messages, updateStreamMessage, createMessage } = useMessage(conversationId)
 
-const sentMessages = computed(() => messages.value
+const sentMessages = computed<SendMsg[]>(() => messages.value
     .filter(message => message.status !== 'loading')
     .map(msg => ({
       role: msg.type === 'question' ? 'user' : 'assistant',
       content: msg.content,
+      ...(msg.imagePath && { imagePath: msg.imagePath })
     }))
 )
 
@@ -76,11 +77,12 @@ const getAnswerMsg = async () => {
   }
 }
 
-const askNewQuestion = async (question: string) => {
+const askNewQuestion = async (question: string, imagePath?: string) => {
   await createMessage({
     content: question,
     type: 'question',
     conversationId: conversationId.value,
+    ...(imagePath && { imagePath })
   })
   await getAnswerMsg()
 }

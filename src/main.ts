@@ -9,7 +9,8 @@ import 'dotenv/config'
 // import { lookup } from 'mime-types'
 import { ChatCompletionCreateParamsStreaming } from 'openai/resources/chat/completions/completions'
 import fs from 'node:fs/promises'
-import * as url from "node:url";
+import * as url from 'node:url'
+import { convertMessages } from './utils'
 
 // import { qianfanDemo } from "./example/baidu_qianfan";
 // import { aliDemo2 } from "./example/ali_bailian";
@@ -18,6 +19,21 @@ import * as url from "node:url";
 if (started) {
   app.quit()
 }
+
+/**
+ * window上可能需要额外的步骤  注册安全协议
+ * https://coding.imooc.com/learn/questiondetail/pylDvPyEva1PkBNm.html
+ */
+// protocol.registerSchemesAsPrivileged([
+//   {
+//     scheme: 'tyler-file',
+//     privileges: {
+//       standard: true,
+//       secure: true,
+//       supportFetchAPI: true,
+//     },
+//   },
+// ])
 
 const copyImageToUserDir = async (imagePath: string) => {
   const userDataPath = app.getPath('userData')
@@ -36,10 +52,15 @@ const createWindow = () => {
     height: 768,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      // spellcheck: false,
+      // enableWebSQL: false,
     },
+    // titleBarStyle: 'hiddenInset',
+    // vibrancy: 'under-window',
+    // visualEffectState: 'active',
   })
 
-  protocol.handle('tyler-file', async req => {
+  protocol.handle('tyler-file', async (req) => {
     console.log('tyler-file::req', req)
     const filePath = decodeURIComponent(req.url.slice('tyler-file://'.length))
     // const data = await fs.readFile(filePath)
@@ -69,6 +90,7 @@ const createWindow = () => {
   ipcMain.on('start-chat', async (event, data: CreateChatProps) => {
     console.log('start-chat', data)
     const { providerName, messageId, selectedModel, messages } = data
+    const convertedMessages = await convertMessages(messages)
 
     // 检查窗口是否已销毁
     if (mainWindow.isDestroyed()) {
@@ -81,7 +103,7 @@ const createWindow = () => {
         const client = new ChatCompletion()
         const stream = (await client.chat(
           {
-            messages: messages as ChatBody['messages'],
+            messages: convertedMessages as ChatBody['messages'],
             stream: true,
           },
           selectedModel
@@ -101,7 +123,7 @@ const createWindow = () => {
           baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
         })
         const stream = await client.chat.completions.create({
-          messages: messages as ChatCompletionCreateParamsStreaming['messages'],
+          messages: convertedMessages as ChatCompletionCreateParamsStreaming['messages'],
           model: selectedModel,
           stream: true,
         })

@@ -18,8 +18,9 @@ const disabledSend = computed(() => {
 
 const onSend = () => {
   if (!disabledSend.value) {
-    emits('send', message.value as string)
+    emits('send', message.value as string, attchedImage.value)
     message.value = ''
+    attchedImage.value = ''
   }
 }
 
@@ -36,7 +37,6 @@ const selectFile = async () => {
 // const handleImageUpload = (e: Event) => {
 //   const file = (e.target as HTMLInputElement).files?.[0]
 //   if (file) {
-//     console.log('123', file)
 //     const reader = new FileReader()
 //     reader.onload = (e) => {
 //       console.log(e.target?.result)
@@ -55,7 +55,8 @@ const removeImage = () => {
 </script>
 
 <template>
-  <div class="message-input w-full border shadow-md rounded py-1.5 px-2 data-[placeholder]:text-gray-400"
+  <div class="message-input w-full border shadow-md rounded py-1.5 px-2 data-[placeholder]:text-gray-400
+       focus-within:border-green-500 transition-colors duration-200"
   >
     <div class="flex items-center gap-2">
 <!--      <input type="file" accept="image/*" class="hidden" ref="inputFileRef" :multiple="false" @change="handleImageUpload">-->

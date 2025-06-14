@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { computed, ref, watchEffect } from "vue";
-import { ConversationProps } from "../types";
+import { ConversationProps, MessageProps } from "../types";
 import { db } from "../db";
 import { useRoute } from "vue-router";
 
@@ -38,6 +38,10 @@ export const useConversationStore = defineStore('conversation', () => {
 		return conversations.value.find(item => item.id === conversationId)
 	}
 
+	const addNewMessage = (...args: Parameters<typeof db.messages.add>) => {
+		return db.messages.add(...args)
+	}
+
 	const totalNumber = computed(() => conversations.value.length)
 
 	return {
@@ -45,6 +49,7 @@ export const useConversationStore = defineStore('conversation', () => {
 		createConversation,
 		fetchConversations,
 		getConversationById,
+		addNewMessage,
 		totalNumber,
 		selectedId,
 	}

@@ -19,7 +19,7 @@ export interface ProviderProps {
 }
 
 export interface MessageEmits {
-	(e: 'send', value: string): void;
+	(e: 'send', value: string, imagePath?: string): void;
 }
 
 export interface MessageListInstance {
@@ -33,13 +33,19 @@ export interface MessageProps {
 	content: string;
 	type: 'question' | 'answer';
 	conversationId: number;
+	imagePath?: string;
 	status?: MessageStatus;
 	createdAt: string;
 	updatedAt: string;
 }
+export interface SendMsg {
+	role: string;
+	content: string,
+	imagePath?: string
+}
 
 export interface CreateChatProps {
-	messages: { role: string; content: string}[];
+	messages: SendMsg[];
 	providerName: string;
 	selectedModel: string;
 	messageId: number;
@@ -58,4 +64,15 @@ export interface UpdatedStreamError {
 	errorMsg: string;
 }
 export type OnUpdatedCallback = (data: UpdatedStreamData | UpdatedStreamError) => void;
-export type OnSelectFile = (fileType?: string[]) => Promise<string>
+export type SelectFile = (fileType?: string[]) => Promise<{ canceled: boolean, filePaths: string[] }>
+
+export type MsgContent = {
+	type: string
+	text: string
+} | {
+	type: string
+	image_url: {
+		url: string
+	}
+}
+
