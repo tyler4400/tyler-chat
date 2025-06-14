@@ -2,7 +2,7 @@
 import Button from "./Button.vue";
 
 import { MessageEmits } from "../types";
-import { computed, useTemplateRef, ref } from "vue";
+import { computed, ref } from "vue";
 import { useLoadingMsgStore } from "../stores/useLoadingMsgStore";
 import { Icon } from '@iconify/vue'
 
@@ -23,30 +23,34 @@ const onSend = () => {
   }
 }
 
-const inputFileRef = useTemplateRef<HTMLInputElement>('inputFileRef')
-const triggerFileInput = () => {
-  inputFileRef?.value?.click()
+// const inputFileRef = useTemplateRef<HTMLInputElement>('inputFileRef')
+const attchedImage = ref('')
+const selectFile = async () => {
+  // inputFileRef?.value?.click()
+  const { canceled, filePaths } = await window.electronAPI.selectFile()
+  console.log('user selection info::', canceled, filePaths)
+  if (canceled) return
+  attchedImage.value = filePaths[0]
 }
 
-const attchedImage = ref('')
-const handleImageUpload = (e: Event) => {
-  const file = (e.target as HTMLInputElement).files?.[0]
-  if (file) {
-    console.log('123', file)
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      console.log(e.target?.result)
-      attchedImage.value = e.target?.result as string
-    }
-    reader.readAsDataURL(file)
-  }
-}
+// const handleImageUpload = (e: Event) => {
+//   const file = (e.target as HTMLInputElement).files?.[0]
+//   if (file) {
+//     console.log('123', file)
+//     const reader = new FileReader()
+//     reader.onload = (e) => {
+//       console.log(e.target?.result)
+//       attchedImage.value = e.target?.result as string
+//     }
+//     reader.readAsDataURL(file)
+//   }
+// }
 
 const removeImage = () => {
   attchedImage.value = ''
-  if (inputFileRef.value) {
-    inputFileRef.value.value = ''
-  }
+  // if (inputFileRef.value) {
+  //   inputFileRef.value.value = ''
+  // }
 }
 </script>
 
@@ -54,13 +58,13 @@ const removeImage = () => {
   <div class="message-input w-full border shadow-md rounded py-1.5 px-2 data-[placeholder]:text-gray-400"
   >
     <div class="flex items-center gap-2">
-      <input type="file" accept="image/*" class="hidden" ref="inputFileRef" :multiple="false" @change="handleImageUpload">
+<!--      <input type="file" accept="image/*" class="hidden" ref="inputFileRef" :multiple="false" @change="handleImageUpload">-->
       <Icon
         :class="loadingMsgStore.isLoading ? 'text-green-700/50 pointer-events-none' : 'text-green-700 cursor-pointer'"
         icon="lets-icons:img-box-fill"
         width="24"
         height="24"
-        @click="triggerFileInput"
+        @click="selectFile"
       />
       <input
         type="text"
@@ -74,11 +78,11 @@ const removeImage = () => {
       </Button>
     </div>
     <div class="relative inline-block group" v-if="attchedImage">
-      <img :src="attchedImage" alt="Preview" class="h-12 object-cover rounded">
+      <img :src="`tyler-file://${attchedImage}`" alt="Preview" class="h-12 object-cover rounded">
       <div class="absolute inset-0 flex items-center justify-center
             group-hover:bg-gray-400/50 opacity-0 group-hover:opacity-100
             transition-colors duration-200">
-        <Icon @click="removeImage" class="text-gray-800 cursor-pointer" icon="line-md:trash" width="24" height="24" />
+        <Icon @click="removeImage" class="text-green-900 cursor-pointer" icon="line-md:trash" width="24" height="24" />
       </div>
     </div>
   </div>

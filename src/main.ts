@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, dialog, protocol, net } from 'electron'
 import path from 'node:path'
 import started from 'electron-squirrel-startup'
 import { CreateChatProps } from './types'
@@ -6,7 +6,10 @@ import { ChatCompletion } from '@baiducloud/qianfan'
 import { ChatBody, RespBase } from '@baiducloud/qianfan/dist/src/interface'
 import { OpenAI } from 'openai'
 import 'dotenv/config'
+// import { lookup } from 'mime-types'
 import { ChatCompletionCreateParamsStreaming } from 'openai/resources/chat/completions/completions'
+import fs from 'node:fs/promises'
+import * as url from "node:url";
 
 // import { qianfanDemo } from "./example/baidu_qianfan";
 // import { aliDemo2 } from "./example/ali_bailian";
@@ -14,6 +17,16 @@ import { ChatCompletionCreateParamsStreaming } from 'openai/resources/chat/compl
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
   app.quit()
+}
+
+const copyImageToUserDir = async (imagePath: string) => {
+  const userDataPath = app.getPath('userData')
+  const userImageDir = path.join(userDataPath, 'images')
+  await fs.mkdir(userImageDir, { recursive: true })
+  const imageName = path.basename(imagePath)
+  const destPath = path.join(userImageDir, imageName)
+  await fs.copyFile(imagePath, destPath)
+  return destPath
 }
 
 const createWindow = () => {
@@ -26,6 +39,33 @@ const createWindow = () => {
     },
   })
 
+  protocol.handle('tyler-file', async req => {
+    console.log('tyler-file::req', req)
+    const filePath = decodeURIComponent(req.url.slice('tyler-file://'.length))
+    // const data = await fs.readFile(filePath)
+    // return new Response(data, {
+    //   headers: {
+    //     'Content-Type': lookup(filePath) as string
+    //   },
+    //   status: 200,
+    // })
+    const dataUrl = url.pathToFileURL(filePath).toString()
+    return net.fetch(dataUrl)
+  })
+  ipcMain.handle('select-file', async (event, fileType: string[] = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'webp']) => {
+    const { canceled, filePaths } = await dialog.showOpenDialog({
+      title: '请选择文件',
+      filters: [{ name: 'Images', extensions: fileType }],
+      properties: ['openFile'],
+    })
+    if (canceled) {
+      console.log('用户取消选择')
+      return { canceled, filePaths: [] }
+    }
+    console.log('用户选择的文件：', filePaths.join('\n'))
+    const filePath = await copyImageToUserDir(filePaths[0])
+    return { canceled, filePaths: [filePath] }
+  })
   ipcMain.on('start-chat', async (event, data: CreateChatProps) => {
     console.log('start-chat', data)
     const { providerName, messageId, selectedModel, messages } = data

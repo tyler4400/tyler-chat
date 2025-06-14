@@ -58,3 +58,4 @@ export interface UpdatedStreamError {
 	errorMsg: string;
 }
 export type OnUpdatedCallback = (data: UpdatedStreamData | UpdatedStreamError) => void;
+export type OnSelectFile = (fileType?: string[]) => Promise<string>
