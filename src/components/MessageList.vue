@@ -53,7 +53,7 @@ defineExpose<MessageListInstance>({
 
         <div class="message-question bg-green-700 text-white p-2 rounded" v-if="message.type === 'question'">
           {{message.content}}
-          <img v-if="message.imagePath" :src="`tyler-file://${message.imagePath}`" alt="Message image" class="w-32 object-cover rounded block">
+          <img v-if="message.imagePath" :src="`tyler-file://${message.imagePath}`" alt="image lost" class="w-32 object-cover rounded block">
         </div>
         <div class="message-answer bg-gray-200 text-gray-700 p-2 rounded inline-block" v-else>
           <template v-if="message.status === 'loading'">
