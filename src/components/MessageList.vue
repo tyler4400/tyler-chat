@@ -60,9 +60,9 @@ defineExpose<MessageListInstance>({
             <Icon icon="eos-icons:three-dots-loading" />
           </template>
           <template v-if="message.status === 'error'">
-            <div class="inline-flex items-center gap-2">
-              <Icon icon="codicon:error" class="text-red-700 w-10" />
-              {{message.content}}
+            <div class="flex items-center gap-2">
+              <Icon icon="codicon:warning" class="text-red-700 w-5 h-5 flex-shrink-0" />
+              <span class="text-red-700">{{ message.content }}</span>
             </div>
           </template>
           <div class="prose prose-slate prose-headings:my-1 prose-h3:text-lg
