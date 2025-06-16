@@ -76,3 +76,8 @@ export type MsgContent = {
 	}
 }
 
+export interface ChatMessageProps {
+	role: string;
+	content: string;
+	imagePath?: string;
+}

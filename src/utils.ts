@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import { lookup } from "mime-types";
-import { MsgContent } from "./types";
+import { ChatMessageProps, MsgContent } from "./types";
 
-export async function convertMessages( messages:  { role: string; content: string, imagePath?: string}[]) {
+export async function convertMessages( messages:  ChatMessageProps[]) {
 	const convertedMessages = []
 	for (const message of messages) {
 		let convertedContent: string | MsgContent[]
