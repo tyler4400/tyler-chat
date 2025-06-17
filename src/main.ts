@@ -2,18 +2,10 @@ import { app, BrowserWindow, ipcMain, dialog, protocol, net } from 'electron'
 import path from 'node:path'
 import started from 'electron-squirrel-startup'
 import { CreateChatProps } from './types'
-import { ChatCompletion } from '@baiducloud/qianfan'
-import { ChatBody, RespBase } from '@baiducloud/qianfan/dist/src/interface'
-import { OpenAI } from 'openai'
 import 'dotenv/config'
-// import { lookup } from 'mime-types'
-import { ChatCompletionCreateParamsStreaming } from 'openai/resources/chat/completions/completions'
 import fs from 'node:fs/promises'
 import * as url from 'node:url'
-import { convertMessages } from './utils'
-
-// import { qianfanDemo } from "./example/baidu_qianfan";
-// import { aliDemo2 } from "./example/ali_bailian";
+import { createProvider } from "./providers/createProvider";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -73,6 +65,7 @@ const createWindow = () => {
     const dataUrl = url.pathToFileURL(filePath).toString()
     return net.fetch(dataUrl)
   })
+
   ipcMain.handle('select-file', async (event, fileType: string[] = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'webp']) => {
     const { canceled, filePaths } = await dialog.showOpenDialog({
       title: '请选择文件',
@@ -87,10 +80,10 @@ const createWindow = () => {
     const filePath = await copyImageToUserDir(filePaths[0])
     return { canceled, filePaths: [filePath] }
   })
+
   ipcMain.on('start-chat', async (event, data: CreateChatProps) => {
     console.log('start-chat', data)
     const { providerName, messageId, selectedModel, messages } = data
-    const convertedMessages = await convertMessages(messages)
 
     // 检查窗口是否已销毁
     if (mainWindow.isDestroyed()) {
@@ -99,48 +92,12 @@ const createWindow = () => {
     }
 
     try {
-      if (providerName === 'qianfan') {
-        const client = new ChatCompletion()
-        const stream = (await client.chat(
-          {
-            messages: convertedMessages as ChatBody['messages'],
-            stream: true,
-          },
-          selectedModel
-        )) as AsyncIterable<RespBase>
-
-        for await (const chunk of stream) {
-          const { is_end, result } = chunk
-          const content = {
-            messageId,
-            data: { is_end, result },
-          }
-          mainWindow.webContents.send('update-message', content)
-        }
-      } else if (providerName === 'dashscope') {
-        const client = new OpenAI({
-          apiKey: process.env['ALI_API_KEY'],
-          baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
-        })
-        const stream = await client.chat.completions.create({
-          messages: convertedMessages as ChatCompletionCreateParamsStreaming['messages'],
-          model: selectedModel,
-          stream: true,
-        })
-
-        for await (const chunk of stream) {
-          const choice = chunk.choices[0]
-          const content = {
-            messageId,
-            data: {
-              is_end: choice.finish_reason === 'stop',
-              result: choice.delta.content || '',
-            },
-          }
-          mainWindow.webContents.send('update-message', content)
-        }
-      } else {
-        throw new Error('Provider not supported')
+      const provider = createProvider(providerName)
+      const stream = await provider.chat(messages, selectedModel)
+      for await (const chunk of stream) {
+        console.log('the chunk', chunk)
+        const content = { messageId, data: chunk }
+        mainWindow.webContents.send('update-message', content)
       }
     } catch (error) {
       console.error('Error in chat stream:', error)

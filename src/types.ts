@@ -81,3 +81,13 @@ export interface ChatMessageProps {
 	content: string;
 	imagePath?: string;
 }
+
+export interface UniversalChunkProps {
+	is_end: boolean;
+	result: string;
+}
+
+export interface BaiduChunkProps {
+	is_end: boolean;
+	result: string;
+}
