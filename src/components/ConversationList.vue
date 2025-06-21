@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ConversationProps } from "../types";
-import { useRouter } from "vue-router";
+import { useRouter } from "vue-router"  ;
 import dayjs from 'dayjs'
 import { useConversationStore } from "../stores/useConversationStore";
 import { useLoadingMsgStore } from "../stores/useLoadingMsgStore";
