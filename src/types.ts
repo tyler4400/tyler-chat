@@ -91,3 +91,8 @@ export interface BaiduChunkProps {
 	is_end: boolean;
 	result: string;
 }
+
+export interface AppConfig {
+	language: 'zh' | 'en'
+	fontSize: number
+}

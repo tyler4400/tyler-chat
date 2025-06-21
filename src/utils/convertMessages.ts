@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import { lookup } from "mime-types";
-import { ChatMessageProps, MsgContent } from "./types";
+import { ChatMessageProps, MsgContent } from "../types";
 
 export async function convertMessages( messages:  ChatMessageProps[]) {
 	const convertedMessages = []

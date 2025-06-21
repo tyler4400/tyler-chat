@@ -1,11 +1,12 @@
 import { app, BrowserWindow, ipcMain, dialog, protocol, net } from 'electron'
 import path from 'node:path'
 import started from 'electron-squirrel-startup'
-import { CreateChatProps } from './types'
+import { AppConfig, CreateChatProps } from './types'
 import 'dotenv/config'
 import fs from 'node:fs/promises'
 import * as url from 'node:url'
 import { createProvider } from "./providers/createProvider";
+import { systemConfig } from "./utils";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -37,7 +38,10 @@ const copyImageToUserDir = async (imagePath: string) => {
   return destPath
 }
 
-const createWindow = () => {
+const createWindow = async () => {
+  // 初始化配置
+  await systemConfig.load()
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 1100,
@@ -106,6 +110,14 @@ const createWindow = () => {
         errorMsg: error.message,
       })
     }
+  })
+
+  ipcMain.handle('get-config', () => {
+    return systemConfig.get()
+  })
+
+  ipcMain.handle('update-config', async (event, newConfig: AppConfig) => {
+    return await systemConfig.update(newConfig)
   })
 
   // and load the index.html of the app.
