@@ -92,7 +92,9 @@ export interface BaiduChunkProps {
 	result: string;
 }
 
+export type LanguageType = 'zh' | 'en'
+
 export interface AppConfig {
-	language: 'zh' | 'en'
+	language: LanguageType
 	fontSize: number
 }

@@ -7,7 +7,7 @@ export default {
   },
   common: {
     send: 'Send',
-    chinese: 'Chinese',
+    chinese: '中文',
     english: 'English',
     newChat: 'New Chat',
     settings: 'Settings',
