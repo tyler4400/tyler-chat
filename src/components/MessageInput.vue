@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import Button from "./Button.vue";
+import Button from './Button.vue'
 
-import { MessageEmits } from "../types";
-import { computed, ref } from "vue";
-import { useLoadingMsgStore } from "../stores/useLoadingMsgStore";
+import { MessageEmits } from '../types'
+import { computed, ref } from 'vue'
+import { useLoadingMsgStore } from '../stores/useLoadingMsgStore'
 import { Icon } from '@iconify/vue'
+import { useI18n } from 'vue-i18n'
 
-const { disabledInput = false } = defineProps<{  disabledInput?: boolean }>()
+const { t } = useI18n()
+
+const { disabledInput = false } = defineProps<{ disabledInput?: boolean }>()
 const message = defineModel<string>()
 const emits = defineEmits<MessageEmits>()
 
@@ -59,7 +62,7 @@ const removeImage = () => {
        focus-within:border-green-500 transition-colors duration-200"
   >
     <div class="flex items-center gap-2">
-<!--      <input type="file" accept="image/*" class="hidden" ref="inputFileRef" :multiple="false" @change="handleImageUpload">-->
+      <!--      <input type="file" accept="image/*" class="hidden" ref="inputFileRef" :multiple="false" @change="handleImageUpload">-->
       <Icon
         :class="loadingMsgStore.isLoading ? 'text-green-700/50 pointer-events-none' : 'text-green-700 cursor-pointer'"
         icon="lets-icons:img-box-fill"
@@ -70,12 +73,17 @@ const removeImage = () => {
       <input
         type="text"
         v-model="message"
-        placeholder="请输入内容"
+        :placeholder="t('common.inputPlaceholder')"
         class="flex-1 outline-none bg-white focus:ring-0"
         @keydown.enter="onSend"
+      />
+      <Button
+        icon-name="radix-icons:paper-plane"
+        @click="onSend"
+        :loading="loadingMsgStore.isLoading"
+        :disabled="disabledSend"
       >
-      <Button icon-name="radix-icons:paper-plane" @click="onSend" :loading="loadingMsgStore.isLoading" :disabled="disabledSend">
-        {{loadingMsgStore.isLoading ? '接收中' : '发送'}}
+        {{ loadingMsgStore.isLoading ? t('common.receiving') : t('common.send') }}
       </Button>
     </div>
     <div class="relative inline-block group" v-if="attchedImage">
@@ -89,6 +97,4 @@ const removeImage = () => {
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

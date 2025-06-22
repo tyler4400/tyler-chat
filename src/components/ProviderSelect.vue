@@ -13,8 +13,11 @@ import {
   SelectValue,
   SelectViewport,
 } from 'radix-vue'
-import { ProviderProps } from "../types";
-import { Icon } from "@iconify/vue"
+import { ProviderProps } from '../types'
+import { Icon } from '@iconify/vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 defineProps<{ items: ProviderProps[] }>()
 const currentModel = defineModel<string>()
@@ -23,9 +26,11 @@ const currentModel = defineModel<string>()
 <template>
   <div class="provider-select w-full">
     <SelectRoot v-model="currentModel">
-      <SelectTrigger class="flex w-full items-center justify-between rounded-md py-1.5 px-3 shadow-sm border data-[placeholder]:text-gray-400">
-        <SelectValue placeholder="Select a model..." />
-        <Icon icon="radix-icons:chevron-down" class="h-5 w-5"/>
+      <SelectTrigger
+        class="flex w-full items-center justify-between rounded-md py-1.5 px-3 shadow-sm border data-[placeholder]:text-gray-400"
+      >
+        <SelectValue :placeholder="t('provider.selectModel')" />
+        <Icon icon="radix-icons:chevron-down" class="h-5 w-5" />
       </SelectTrigger>
       <SelectPortal>
         <SelectContent class="bg-white shadow-md rounded-md border z-[100]">
@@ -33,7 +38,7 @@ const currentModel = defineModel<string>()
             <template v-for="provider in items">
               <SelectLabel class="flex items-center gap-2 text-gray-500 h-6">
                 <img :src="provider.avatar" :alt="provider.name" class="w-5 h-5 rounded" />
-                {{provider.name}}
+                {{ provider.name }}
               </SelectLabel>
               <SelectGroup class="pl-5">
                 <SelectItem
@@ -48,7 +53,7 @@ const currentModel = defineModel<string>()
                   <SelectItemIndicator>
                     <Icon icon="radix-icons:check" class="text-white" />
                   </SelectItemIndicator>
-                  <SelectItemText>{{model}}</SelectItemText>
+                  <SelectItemText>{{ model }}</SelectItemText>
                 </SelectItem>
               </SelectGroup>
             </template>
