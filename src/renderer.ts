@@ -35,6 +35,7 @@ import Home from "./views/Home.vue";
 import Conversation from "./views/Conversation.vue";
 import Settings from "./views/Settings.vue";
 import { createPinia } from "pinia";
+import { i18n } from './i18n'
 
 const routes: RouteRecordRaw[] = [
 	{ path: '/', component: Home },
@@ -51,6 +52,7 @@ const pinia  = createPinia()
 const app = createApp(App)
 app.use(router)
 app.use(pinia)
+app.use(i18n)
 app.mount('#app')
 
 

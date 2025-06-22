@@ -3,7 +3,9 @@
     <h1 class="text-2xl font-bold mb-8">应用设置</h1>
     <div class="space-y-6">
       <div class="setting-item">
-        <label for="language" class="block text-sm font-medium text-gray-700 mb-2" >语言设置</label>
+        <label for="language" class="block text-sm font-medium text-gray-700 mb-2" >
+          {{ t('settings.language') }}
+        </label>
         <SelectRoot v-model="currentConfig.language" id="language" class="select-root">
           <SelectTrigger class="w-40 flex items-center justify-between rounded-md px-3 py-2 text-sm gap-1 bg-white border border-gray-300">
             <SelectValue placeholder="选择语言..." />
@@ -79,6 +81,10 @@ import {
 import { onMounted, reactive, watch } from "vue";
 import { AppConfig } from "../types";
 import { Icon } from '@iconify/vue'
+import { setI18nLanguage } from "../i18n";
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const currentConfig = reactive<AppConfig>({
   language: 'zh',
@@ -94,5 +100,7 @@ watch(currentConfig, async (newConfig) => {
   await window.electronAPI.updateConfig({ ...newConfig })
 }, { deep: true })
 
+// 监听语言变化
+watch(() => currentConfig.language, newLang => setI18nLanguage(newLang))
 
 </script>
