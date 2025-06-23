@@ -33,7 +33,7 @@ import './index.css';
 import 'highlight.js/styles/github-dark.min.css'
 import Home from "./views/Home.vue";
 import Conversation from "./views/Conversation.vue";
-import Settings from "./views/Settings.vue";
+import Settings from "./views/Settings";
 import { createPinia } from "pinia";
 import { i18n } from './i18n'
 

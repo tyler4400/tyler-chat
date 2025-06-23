@@ -6,7 +6,22 @@ import { tryCatch } from "./tryCatch";
 
 export const DEFAULT_CONFIG: AppConfig = {
 	language: 'zh',
-	fontSize: 14
+	fontSize: 14,
+	providerConfigs: {
+		dashscope: {
+			apiKey: process.env['ALI_API_KEY'],
+			baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+		},
+		openai: {},
+		deepseek: {
+			apiKey: process.env['DEEPSEEK_API_KEY'],
+			baseURL: 'https://api.deepseek.com/v1',
+		},
+		qianfan: {
+			accessKey: process.env['QIANFAN_ACCESS_KEY'],
+			secretKey: process.env['QIANFAN_SECRET_KEY'],
+		},
+	},
 }
 
 const configPath = path.join(app.getPath('userData'), 'config.json')

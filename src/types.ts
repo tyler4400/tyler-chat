@@ -9,7 +9,7 @@ export interface ConversationProps {
 
 export interface ProviderProps {
 	id: number;
-	name: string; // 是唯一的
+	name: ProviderName; // 是唯一的
 	title?: string;
 	desc?: string;
 	avatar?: string;
@@ -94,7 +94,32 @@ export interface BaiduChunkProps {
 
 export type LanguageType = 'zh' | 'en'
 
+export interface ProviderConfig {
+	apiKey?: string;
+	baseURL?: string;
+	accessKey?: string,
+	secretKey?: string,
+	// models?: string[];
+}
+
 export interface AppConfig {
 	language: LanguageType
 	fontSize: number
+	providerConfigs: {
+		dashscope: ProviderConfig,
+		openai: ProviderConfig,
+		deepseek: ProviderConfig,
+		qianfan: ProviderConfig,
+	},
+}
+export type ProviderName = keyof AppConfig['providerConfigs']
+
+
+export interface ProviderConfigItem {
+	key: keyof ProviderConfig;
+	label: string;
+	value?: string;
+	type: 'text' | 'password' | 'number';
+	required?: boolean;
+	placeholder?: string;
 }

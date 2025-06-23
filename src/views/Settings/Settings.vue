@@ -86,7 +86,7 @@
 
       <TabsContent value="models" class="space-y-4">
         <AccordionRoot type="single" collapsible>
-          <AccordionItem v-for="provider in providers" :key="provider.id" :value="provider.name" class="border rounded-lg mb-2">
+          <AccordionItem v-for="provider in providerStore.providers" :key="provider.id" :value="provider.name" class="border rounded-lg mb-2">
             <AccordionTrigger class="AccordionTrigger group flex items-center justify-between w-full p-4 text-left">
               <div class="flex items-center gap-2">
                 <img :src="provider.avatar" :alt="provider.name" class="w-6 h-6 rounded">
@@ -94,19 +94,18 @@
               </div>
               <Icon icon="radix-icons:chevron-down" class="transition-transform duration-300 ease-in-out group-data-[state=open]:rotate-180" />
             </AccordionTrigger>
-            <AccordionContent class="AccordionContent p-4 pt-0 data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp overflow-hidden">
+            <AccordionContent class="AccordionContent p-4 pt-0.5 data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp overflow-hidden">
               <div class="space-y-4 ">
-                <div class="flex items-center gap-4">
-                  <label class="text-sm font-medium text-gray-700 w-24">Access Key</label>
-                  <input type="text" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500" placeholder="abcd" />
-                </div>
-                <div class="flex items-center gap-4">
-                  <label class="text-sm font-medium text-gray-700 w-24">Secret Key</label>
-                  <input type="password" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500" placeholder="abcd" />
-                </div>
-                <div class="flex items-center gap-4">
-                  <label class="text-sm font-medium text-gray-700 w-24">Base URL</label>
-                  <input type="text" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500" placeholder="abcd" />
+                <div class="flex items-center gap-4" v-for="config in getProviderConfig(provider.name)">
+                  <label class="text-sm font-medium text-gray-700 w-24">{{ config.key }}</label>
+                  <input
+                    :type="config.type"
+                    class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
+                    :placeholder="config.placeholder"
+                    :required="config.required"
+                    :value="config.value"
+                    @input="e => updateProviderConfig(provider.name, config.key, (e.target as HTMLInputElement).value)"
+                  />
                 </div>
               </div>
             </AccordionContent>
@@ -146,40 +145,55 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from 'radix-vue'
-import { computed, onMounted, reactive, ref, watch } from 'vue'
-import { AppConfig } from '../types'
+import { onMounted, reactive, ref, watch, toRaw } from 'vue'
+import { AppConfig, ProviderConfig, ProviderConfigItem, ProviderName } from '../../types'
 import { Icon } from '@iconify/vue'
 import { useI18n } from 'vue-i18n'
-import { setI18nLanguage } from '../i18n'
-import { useProviderStore } from "../stores/useProviderStore";
+import { setI18nLanguage } from '../../i18n'
+import { useProviderStore } from "../../stores/useProviderStore";
+import { providerConfigs } from "./providerConfig";
 
 const { t } = useI18n()
 
 const providerStore = useProviderStore()
-const providers = computed(() => providerStore.providers)
 
 const activeTab = ref<'general' | 'models'>('general')
 
 
-const currentConfig = reactive<AppConfig>({
-  language: 'zh',
-  fontSize: 14,
-})
+const currentConfig = reactive<AppConfig>({} as AppConfig)
 
 onMounted(async () => {
   const config = await window.electronAPI.getConfig()
   Object.assign(currentConfig, config)
 })
 
+const getProviderConfig = (providerName: ProviderName) => {
+  const fieldConfig = providerConfigs[providerName]
+  return fieldConfig.map(item => ({
+    ...item,
+    value: currentConfig.providerConfigs?.[providerName]?.[item.key] ?? item.value,
+  }) as ProviderConfigItem)
+}
+
+const updateProviderConfig = (providerName: ProviderName, key: keyof ProviderConfig, value: string) => {
+  if (!currentConfig.providerConfigs[providerName]) {
+    currentConfig.providerConfigs[providerName] = {}
+  }
+  currentConfig.providerConfigs[providerName][key] = value
+}
+
+// 监听配置变化, 保存到electron
 watch(
   currentConfig,
   async (newConfig) => {
-    await window.electronAPI.updateConfig({ ...newConfig })
+    console.log('newConfig', newConfig)
+    console.log('toRaw(newConfig)', toRaw(newConfig))
+    await window.electronAPI.updateConfig(toRaw(newConfig))
   },
   { deep: true }
 )
 
-// 监听语言变化
+// 监听语言变化, 应用语言设置
 watch(
   () => currentConfig.language,
   (newLang, oldLang) => {
