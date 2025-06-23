@@ -12,7 +12,7 @@
         </TabsTrigger>
       </TabsList>
 
-      <TabsContent value="general" class="space-y-6 max-w-[500px]">
+      <TabsContent value="general" class="space-y-6">
         <div class="space-y-6">
           <div class="setting-item">
             <label for="language" class="block text-sm font-medium text-gray-700 mb-2">

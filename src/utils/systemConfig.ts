@@ -1,7 +1,8 @@
 import { AppConfig } from "../types";
 import path from "node:path";
-import { app } from "electron";
+import { app, dialog } from "electron";
 import fs from "node:fs/promises";
+import { tryCatch } from "./tryCatch";
 
 export const DEFAULT_CONFIG: AppConfig = {
 	language: 'zh',
@@ -10,30 +11,34 @@ export const DEFAULT_CONFIG: AppConfig = {
 
 const configPath = path.join(app.getPath('userData'), 'config.json')
 
-let config: AppConfig = { ...DEFAULT_CONFIG };
-
 export const systemConfig = {
-	async load() {
-		try {
-			const data = await fs.readFile(configPath, 'utf-8')
-			config = { ...DEFAULT_CONFIG, ...JSON.parse(data)}
-		} catch {
-			await this.save()
+	async load(): Promise<AppConfig> {
+		const [data, error] = await tryCatch(fs.readFile(configPath, 'utf-8'))
+		if (error) {
+			console.error('error', error)
+			this.forceSave()
+			return DEFAULT_CONFIG
 		}
-		return config
+
+		if (!data) {
+			return this.forceSave()
+		}
+		try {
+			return JSON.parse(data)
+		} catch (e) {
+			console.error('parseError', e)
+			dialog.showErrorBox('配置文件已损坏', `请检查:${configPath}`)
+			return this.forceSave()
+		}
 	},
 
-	async save() {
+	async forceSave(config: AppConfig = DEFAULT_CONFIG): Promise<AppConfig> {
 		await fs.writeFile(configPath, JSON.stringify(config, null, 2))
 		return config
 	},
 
-	async update(newConfig: Partial<AppConfig>) {
-		config = { ...config, ...newConfig }
-		return await this.save()
-	},
-
-	get() {
-		return config
+	async update(newConfig: Partial<AppConfig>): Promise<AppConfig> {
+		const config = await this.load()
+		return this.forceSave({ ...config, ...newConfig })
 	},
 }

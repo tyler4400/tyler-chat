@@ -40,7 +40,8 @@ const copyImageToUserDir = async (imagePath: string) => {
 
 const createWindow = async () => {
   // 初始化配置
-  await systemConfig.load()
+  const config = await systemConfig.load()
+  console.log('初始系统配置为', config)
 
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -112,8 +113,8 @@ const createWindow = async () => {
     }
   })
 
-  ipcMain.handle('get-config', () => {
-    return systemConfig.get()
+  ipcMain.handle('get-config', async () => {
+    return await systemConfig.load()
   })
 
   ipcMain.handle('update-config', async (event, newConfig: AppConfig) => {
@@ -151,6 +152,18 @@ app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow()
   }
+})
+
+// 全局未捕获异常处理
+process.on('uncaughtException', (error) => {
+  console.error('未捕获的异常:', error)
+  dialog.showErrorBox('应用程序错误', `发生未捕获的异常: ${error.message}`)
+})
+
+// 全局未处理的 Promise 拒绝处理
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('未处理的 Promise 拒绝:', reason)
+  dialog.showErrorBox('Promise 错误', `未处理的 Promise 拒绝: ${reason}`)
 })
 
 // In this file you can include the rest of your app's specific main process
