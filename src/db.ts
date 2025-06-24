@@ -1,6 +1,6 @@
 import Dexie, { EntityTable } from "dexie";
 import { ConversationProps, MessageProps, ProviderProps } from "./types";
-import { providers } from "./components/testData";
+import { providers } from "./DBInitData";
 
 export const db = new Dexie('tylerChatDB') as Dexie & {
 	providers: EntityTable<ProviderProps, 'id'>;

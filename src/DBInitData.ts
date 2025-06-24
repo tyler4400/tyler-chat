@@ -1,5 +1,6 @@
-import { ProviderProps } from "../types";
+import { ProviderProps } from "./types";
 
+// indexdb 的默认初始数据
 export const providers: ProviderProps[] = [
 	{
 		id: 1,
