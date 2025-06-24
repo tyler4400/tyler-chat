@@ -46,7 +46,7 @@ export interface SendMsg {
 
 export interface CreateChatProps {
 	messages: SendMsg[];
-	providerName: string;
+	providerName: ProviderName;
 	selectedModel: string;
 	messageId: number;
 }

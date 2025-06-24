@@ -97,7 +97,7 @@ const createWindow = async () => {
     }
 
     try {
-      const provider = createProvider(providerName)
+      const provider = await createProvider(providerName)
       const stream = await provider.chat(messages, selectedModel)
       for await (const chunk of stream) {
         console.log('the chunk', chunk)
