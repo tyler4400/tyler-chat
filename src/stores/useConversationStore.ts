@@ -2,10 +2,11 @@ import { defineStore } from "pinia";
 import { computed, ref, watchEffect } from "vue";
 import { ConversationProps, MessageProps } from "../types";
 import { db } from "../db";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 export const useConversationStore = defineStore('conversation', () => {
 	const route = useRoute()
+	const router = useRouter()
 
 	const conversations = ref<ConversationProps[]>([])
 
@@ -22,6 +23,15 @@ export const useConversationStore = defineStore('conversation', () => {
 
 	const fetchConversations = async () => {
 		conversations.value = await db.conversations.toArray()
+	}
+
+	const deleteConversation = async (id: number) => {
+		await db.conversations.delete(id)
+		await db.messages.where('conversationId').equals(id).delete()
+		await fetchConversations()
+		if (selectedId.value === id) {
+			await router.push('/')
+		}
 	}
 
 	const createConversation = async (createData: Omit<ConversationProps, 'id' | 'createdAt' | 'updatedAt'>) =>{
@@ -48,6 +58,7 @@ export const useConversationStore = defineStore('conversation', () => {
 		conversations,
 		createConversation,
 		fetchConversations,
+		deleteConversation,
 		getConversationById,
 		addNewMessage,
 		totalNumber,
