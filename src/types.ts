@@ -123,3 +123,5 @@ export interface ProviderConfigItem {
 	required?: boolean;
 	placeholder?: string;
 }
+
+export interface TestConnectionResult { success: boolean; message: string }

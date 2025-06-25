@@ -28,6 +28,7 @@ export const initLocale = async () => {
     const config = await window.electronAPI.getConfig()
     if (config.language) {
       setI18nLanguage(config.language)
+      console.log('[tyler-chat] 系统语言初始化:', config.language)
     }
   } catch (error) {
     console.error('Failed to load language config:', error)

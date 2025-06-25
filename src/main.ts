@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain, dialog, protocol, net } from 'electron'
 import path from 'node:path'
 import started from 'electron-squirrel-startup'
-import { AppConfig, CreateChatProps } from './types'
+import { AppConfig, CreateChatProps, ProviderName } from './types'
 import 'dotenv/config'
 import fs from 'node:fs/promises'
 import * as url from 'node:url'
@@ -41,7 +41,7 @@ const copyImageToUserDir = async (imagePath: string) => {
 const createWindow = async () => {
   // 初始化配置
   const config = await systemConfig.load()
-  console.log('初始系统配置为', config)
+  console.log('[tyler-chat] 初始系统配置为', config)
 
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -120,6 +120,20 @@ const createWindow = async () => {
   ipcMain.handle('update-config', async (event, newConfig: AppConfig) => {
     return await systemConfig.update(newConfig)
   })
+
+  // 添加测试provider连通性的IPC处理
+  ipcMain.handle('test-provider-connection', async (event, providerName: ProviderName) => {
+    try {
+      const provider = await createProvider(providerName);
+      const result = await provider.testConnection();
+      return result;
+    } catch (error: any) {
+      return {
+        success: false,
+        message: `创建provider失败：${error.message}`
+      };
+    }
+  });
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {

@@ -107,6 +107,28 @@
                     @input="e => updateProviderConfig(provider.name, config.key, (e.target as HTMLInputElement).value)"
                   />
                 </div>
+                <div class="flex items-center gap-4">
+                  <label class="text-sm font-medium text-gray-700 w-24 min-w-24">测试连通性</label>
+                  <div class="flex items-center gap-2">
+                    <Button
+                        class="shrink-0"
+                        @click="() => testConnection(provider.name)"
+                        :disabled="testingStates[provider.name]?.loading"
+                        plain
+                        :loading="testingStates[provider.name]?.loading"
+                        :icon-name="getStatusIcon(testingStates[provider.name])"
+                    >
+                      {{ testingStates[provider.name]?.loading ? '测试中...' : '测试' }}
+                    </Button>
+                    <span
+                        v-if="testingStates[provider.name]?.message"
+                        class="text-sm break-all"
+                        :class="testingStates[provider.name]?.success ? 'text-green-700' : 'text-red-500'"
+                    >
+                      {{testingStates[provider.name]?.message}}
+                    </span>
+                  </div>
+                </div>
               </div>
             </AccordionContent>
           </AccordionItem>
@@ -152,6 +174,7 @@ import { useI18n } from 'vue-i18n'
 import { setI18nLanguage } from '../../i18n'
 import { useProviderStore } from "../../stores/useProviderStore";
 import { providerConfigs } from "./providerConfig";
+import Button from '../../components/Button.vue'
 
 const { t } = useI18n()
 
@@ -182,12 +205,46 @@ const updateProviderConfig = (providerName: ProviderName, key: keyof ProviderCon
   currentConfig.providerConfigs[providerName][key] = value
 }
 
+type TestingState = {
+  loading: boolean;
+  success?: boolean;
+  message?: string;
+};
+
+// 添加测试状态管理
+const testingStates = ref<Record<ProviderName, TestingState>>({} as Record<ProviderName, TestingState>);
+// 测试连通性方法
+const testConnection = async (providerName: ProviderName) => {
+  // 设置加载状态
+  testingStates.value[providerName] = { loading: true };
+
+  try {
+    // 调用主进程的测试接口
+    const result = await window.electronAPI.testProviderConnection(providerName);
+
+    testingStates.value[providerName] = {
+      loading: false,
+      success: result.success,
+      message: result.message
+    };
+  } catch (error: any) {
+    testingStates.value[providerName] = {
+      loading: false,
+      success: false,
+      message: `测试失败：${error.message || '未知错误'}`
+    };
+  }
+};
+
+const getStatusIcon = (state: TestingState) => {
+  if (!state?.success && !state?.message) return 'lucide:wifi'
+  return state?.success ? 'lucide:check-circle' : 'lucide:x-circle'
+}
+
 // 监听配置变化, 保存到electron
 watch(
   currentConfig,
   async (newConfig) => {
-    console.log('newConfig', newConfig)
-    console.log('toRaw(newConfig)', toRaw(newConfig))
     await window.electronAPI.updateConfig(toRaw(newConfig))
   },
   { deep: true }

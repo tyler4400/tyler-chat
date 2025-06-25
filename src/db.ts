@@ -18,5 +18,6 @@ export const initProviders = async () => {
 	const count = await db.providers.count()
 	if (count === 0) {
 		db.providers.bulkAdd(providers)
+		console.log('[tyler-chat] 未找到模型配置，加载默认providers', providers)
 	}
 }

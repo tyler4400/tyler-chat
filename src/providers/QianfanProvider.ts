@@ -37,6 +37,38 @@ export class QianfanProvider extends BaseProvider {
     }
   }
 
+  /**
+   * 测试百度千帆API的连通性
+   * 发送一个简单的测试消息来验证access key和secret key是否正确
+   */
+  async testConnection(): Promise<{ success: boolean; message: string }> {
+    try {
+      // 发送一个简单的测试消息
+      const testMessages = [{ role: 'user', content: '你好' }];
+      const stream = await this.client.chat({
+        messages: testMessages as any,
+        stream: false // 使用非流式请求进行测试
+      }, 'ERNIE-Speed-128K') as any;
+
+      if (stream && stream.result) {
+        return {
+          success: true,
+          message: '连接成功！API配置正确'
+        };
+      } else {
+        return {
+          success: false,
+          message: '连接失败：响应格式异常'
+        };
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: `连接失败：${error.message || '未知错误'}`
+      };
+    }
+  }
+
   protected transformResponse(chunk: BaiduChunkProps): UniversalChunkProps {
     return {
       is_end: chunk.is_end,
