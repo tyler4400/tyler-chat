@@ -108,17 +108,18 @@
                   />
                 </div>
                 <div class="flex items-center gap-4">
-                  <label class="text-sm font-medium text-gray-700 w-24 min-w-24">测试连通性</label>
+                  <label class="text-sm font-medium text-gray-700 w-24 min-w-24">{{ t('settings.testConnection') }}</label>
                   <div class="flex items-center gap-2">
                     <Button
                         class="shrink-0"
                         @click="() => testConnection(provider.name)"
                         :disabled="testingStates[provider.name]?.loading"
                         plain
+                        size="small"
                         :loading="testingStates[provider.name]?.loading"
                         :icon-name="getStatusIcon(testingStates[provider.name])"
                     >
-                      {{ testingStates[provider.name]?.loading ? '测试中...' : '测试' }}
+                      {{ testingStates[provider.name]?.loading ? t('settings.testing') : t('settings.test') }}
                     </Button>
                     <span
                         v-if="testingStates[provider.name]?.message"
@@ -231,7 +232,7 @@ const testConnection = async (providerName: ProviderName) => {
     testingStates.value[providerName] = {
       loading: false,
       success: false,
-      message: `测试失败：${error.message || '未知错误'}`
+      message: `${t('settings.testFailed')}${error.message || '未知错误'}`
     };
   }
 };

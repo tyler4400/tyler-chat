@@ -8,6 +8,10 @@ export default {
     models: 'Models',
     chinese: '中文',
     english: 'English',
+    testConnection: 'Connection',
+    test: 'Test',
+    testing: 'Testing...',
+    testFailed: 'Test Failed: ',
   },
   common: {
     send: 'Send',

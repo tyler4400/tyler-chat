@@ -8,6 +8,10 @@ export default {
     models: '模型设置',
     chinese: '中文',
     english: 'English',
+    testConnection: '连通性',
+    test: '测试',
+    testing: '测试中...',
+    testFailed: '测试失败：',
   },
   common: {
     send: '发送',
