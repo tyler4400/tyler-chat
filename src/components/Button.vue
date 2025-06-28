@@ -15,7 +15,7 @@
 import { computed } from 'vue'
 import { Icon } from '@iconify/vue'
 
-export type ButtonColor = 'green' | 'purple'
+export type ButtonColor = 'green' | 'purple' | 'red'
 export type ButtonSize = 'large' | 'small'
 
 export interface ButtonProps {
@@ -42,6 +42,10 @@ const colorVariants: Record<ButtonColor, any> = {
   'purple': {
     plain: 'bg-purple-50 text-purple-700 hover:bg-purple-700 border border-purple-700 hover:text-white active:bg-purple-800',
     normal: 'bg-purple-700 text-white hover:bg-purple-700/90 border border-purple-700 active:bg-purple-800'
+  },
+  'red': {
+    plain: 'bg-red-50 text-red-700 hover:bg-red-700 border border-red-700 hover:text-white active:bg-red-800',
+    normal: 'bg-red-700 text-white hover:bg-red-700/90 border border-red-700 active:bg-red-800'
   }
 }
 const iconWithLoading = computed(() => {
@@ -53,7 +57,7 @@ const iconWithLoading = computed(() => {
 })
 const colorClasses = computed(() => {
   if (props.plain) {
-    return colorVariants[props.color].plain
+      return colorVariants[props.color].plain
   } else {
     return colorVariants[props.color].normal
   }

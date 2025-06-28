@@ -58,7 +58,7 @@ const handleMouseLeave = (id: number) => {
         <Icon
           v-if="hoveredItems.get(item.id)"
           class="text-green-900 transition-all duration-200"
-          icon="line-md:trash"
+            icon="line-md:trash"
           @click.stop="() => conversationStore.deleteConversation(item.id)"
         />
       </div>

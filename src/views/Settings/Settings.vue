@@ -1,6 +1,14 @@
 <template>
   <div class="settings w-[80%] mx-auto p-8">
-    <h1 class="text-2xl font-bold mb-8">{{ t('settings.title') }}</h1>
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-2xl font-bold">
+        {{ t('settings.title') }}
+      </h1>
+      <div class="flex gap-2 justify-end items-center">
+        <Icon icon="line-md:file-download" width="24" height="24" class="m-1 cursor-pointer" />
+        <Icon icon="line-md:file-upload" width="24" height="24" class="m-1 cursor-pointer" />
+      </div>
+    </div>
 
     <TabsRoot v-model="activeTab" class="w-full">
       <TabsList class="flex border-b border-gray-200 mb-6">
@@ -112,6 +120,7 @@
                   <div class="flex items-center gap-2">
                     <Button
                         class="shrink-0"
+                        :color="(testingStates[provider.name]?.success === false) ? 'red' : 'green'"
                         @click="() => testConnection(provider.name)"
                         :disabled="testingStates[provider.name]?.loading"
                         plain

@@ -3,6 +3,7 @@ import { BaseProvider } from './BaseProvider'
 import { ChatMessageProps, UniversalChunkProps } from '../types'
 import { ChatCompletionCreateParamsStreaming } from "openai/resources/chat/completions/completions";
 import { convertMessages } from "../utils";
+import util from 'node:util'
 
 /**
  * # 阿里 百炼
@@ -44,7 +45,7 @@ export class OpenAIProvider extends BaseProvider {
     try {
       // 尝试获取模型列表来测试连通性
       const models = await this.client.models.list();
-      console.log('models', models)
+      console.log('models:', util.inspect(models, { depth: null, colors: true }))
       if (models.data && models.data.length > 0) {
         return {
           success: true,
