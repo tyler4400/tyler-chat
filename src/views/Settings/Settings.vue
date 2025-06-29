@@ -5,6 +5,8 @@
         {{ t('settings.title') }}
       </h1>
       <div class="flex gap-2 justify-end items-center">
+        <!-- 隐藏的文件输入框 -->
+        <input ref="fileInput" type="file" @change="handleFileChange" style="display: none" />
         <Icon
           icon="line-md:file-download"
           width="24"
@@ -12,7 +14,13 @@
           class="m-1 cursor-pointer"
           @click="handleDownloadConfig"
         />
-        <Icon icon="line-md:file-upload" width="24" height="24" class="m-1 cursor-pointer" />
+        <Icon
+          icon="line-md:file-upload"
+          width="24"
+          height="24"
+          class="m-1 cursor-pointer"
+          @click="triggerFileSelect"
+        />
       </div>
     </div>
 
@@ -316,5 +324,57 @@ const handleDownloadConfig = async () => {
   } catch (error) {
     console.error('下载配置文件时发生错误:', error)
   }
+}
+
+// 文件输入框引用
+const fileInput = ref<HTMLInputElement | null>(null)
+
+// 触发文件选择
+const triggerFileSelect = () => {
+  fileInput.value?.click()
+}
+
+// 处理文件变化
+const handleFileChange = async (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (!file) return
+
+  const reader = new FileReader()
+  reader.onload = async (e) => {
+    try {
+      // 解析 JSON
+      const config = JSON.parse(e.target?.result as string)
+
+      // 调用 updateConfig
+      const updatedConfig = await window.electronAPI.updateConfig(config)
+
+      // 更新本地状态
+      Object.assign(currentConfig, updatedConfig)
+
+      // 显示成功通知
+      window.electronAPI.showNotification({
+        title: '配置文件上传',
+        body: '配置文件导入成功！',
+      })
+
+      // 清空文件输入框
+      if (fileInput.value) {
+        fileInput.value.value = ''
+      }
+    } catch (error: any) {
+      // 显示失败通知
+      window.electronAPI.showNotification({
+        title: '配置文件上传',
+        body: `导入失败: ${error.message || '文件格式错误'}`,
+      })
+
+      // 清空文件输入框
+      if (fileInput.value) {
+        fileInput.value.value = ''
+      }
+    }
+  }
+  reader.readAsText(file)
 }
 </script>

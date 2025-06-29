@@ -76,7 +76,7 @@ const createWindow = async () => {
     async (event, fileType: string[] = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'webp']) => {
       const { canceled, filePaths } = await dialog.showOpenDialog({
         title: '请选择文件',
-        filters: [{ name: 'Images', extensions: fileType }],
+        filters: [{ name: 'files', extensions: fileType }],
         properties: ['openFile'],
       })
       if (canceled) {
@@ -174,6 +174,14 @@ const createWindow = async () => {
 
       return { success: false, message: `保存失败: ${error.message}` }
     }
+  })
+
+  // 显示系统通知
+  ipcMain.on('show-notification', (event, { title, body }: { title: string; body: string }) => {
+    new Notification({
+      title,
+      body,
+    }).show()
   })
 
   // and load the index.html of the app.
