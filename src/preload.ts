@@ -10,4 +10,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getConfig: () => ipcRenderer.invoke('get-config'),
   updateConfig: (newConfig: Partial<AppConfig>): Promise<AppConfig> => ipcRenderer.invoke('update-config', newConfig),
   testProviderConnection: (providerName: ProviderName): Promise<TestConnectionResult> => ipcRenderer.invoke('test-provider-connection', providerName),
+  downloadConfig: (): Promise<{ success: boolean; message?: string }> => ipcRenderer.invoke('download-config'),
 })

@@ -1,0 +1,264 @@
+# Vue + Electron 项目 Cursor Rules
+
+## 项目概述
+这是一个基于Vue 3 + Electron的桌面应用项目，使用TypeScript、TailwindCSS等技术栈。
+
+## 核心原则
+
+### 1. 代码编写流程
+- **必须先提供设计方案和伪代码**，等待用户确认后再编写具体代码
+- 不要直接编写代码，始终遵循：设计方案 → 伪代码 → 用户确认 → 具体实现
+- 设计方案要包含：功能分析、技术选型、文件结构、接口设计
+
+### 2. 代码风格要求
+- **保持现有代码格式和风格**，不要随意修改已有的代码结构
+- **避免过度设计**，优先选择简单直接的解决方案
+- 遵循项目现有的命名约定和文件组织方式
+- 使用中文注释，保持注释清晰详细
+
+## 技术栈规范
+
+### Vue 3 相关
+- 使用 Composition API (`<script setup>`)
+- 优先使用 `computed`、`ref`、`reactive` 等组合式API
+- 类型定义使用 TypeScript interface
+- 组件命名使用 PascalCase
+
+### 样式规范
+- **只使用 TailwindCSS 类名**，避免写原生CSS
+- 响应式设计优先考虑桌面端体验
+- 保持与现有UI组件库（Radix Vue）的一致性
+
+### Electron 相关
+- 主进程和渲染进程的通信通过 IPC
+- 文件操作和系统API调用在主进程中处理
+- 安全性考虑：避免在渲染进程中直接使用Node.js API
+
+### 数据管理
+- 使用 Pinia 进行状态管理
+- 本地数据存储使用 Dexie.js (IndexedDB)
+- API调用封装在 Provider 类中
+
+## 编码规范
+
+### 函数和变量命名
+- 事件处理函数使用 `handle` 前缀：`handleClick`、`handleSubmit`
+- 使用描述性的变量名和函数名
+- 常量使用 `const`，避免使用 `function` 声明
+
+### 错误处理
+- 使用 try-catch 处理异步操作
+- 提供用户友好的错误提示
+- 记录详细的错误日志用于调试
+
+### 性能优化
+- 优先考虑代码可读性，而非过度优化性能
+- 合理使用 `computed` 缓存计算结果
+- 避免不必要的响应式数据
+
+## 项目结构约定
+
+### 文件组织 
+src/
+├── components/ # 可复用组件
+├── views/ # 页面组件
+├── stores/ # Pinia状态管理
+├── providers/ # API提供者类
+├── types/ # TypeScript类型定义
+├── utils/ # 工具函数
+├── i18n/ # 国际化配置
+├── db.ts # 数据库配置
+└── renderer.ts # 渲染进程入口
+
+
+### 组件设计
+- 组件保持单一职责
+- Props 使用 TypeScript 接口定义
+- 事件使用 `defineEmits` 明确声明
+- 插槽使用要有明确的用途
+
+### Provider模式
+- 所有API调用都通过Provider类封装
+- 继承BaseProvider抽象类
+- 实现chat()、testConnection()等标准方法
+- 统一的错误处理和响应格式转换
+
+## 开发工作流
+
+### 1. 需求分析阶段
+- 分析功能需求和技术实现方案
+- 确定需要修改的文件和新增的组件
+- 评估对现有代码的影响
+
+### 2. 设计方案阶段
+- 提供详细的技术设计方案
+- 给出伪代码或关键逻辑说明
+- **等待用户确认后再继续**
+
+### 3. 代码实现阶段
+- 严格按照确认的设计方案编写代码
+- 保持现有代码风格和结构
+- 添加必要的中文注释和类型定义
+
+### 4. 测试和优化
+- 考虑边界情况和错误处理
+- 确保代码的健壮性和用户体验
+
+## 国际化规范
+- 所有用户界面文本必须使用 `$t()` 或 `t()` 函数
+- 新增文本需要同时添加中英文翻译
+- 翻译键使用点分割的层级结构，如 `settings.title`
+- 动态文本使用插值，如 `$t('common.count', { count: 5 })`
+
+## 数据库规范
+- 使用Dexie.js操作IndexedDB
+- 数据表结构定义在types.ts中
+- 所有数据操作都要有错误处理
+- 保持数据的一致性和完整性
+
+## IPC通信规范
+- 主进程和渲染进程通信使用标准的IPC模式
+- 在preload.js中暴露安全的API接口
+- 避免在渲染进程中直接使用Node.js API
+- 所有文件操作都在主进程中处理
+
+## 禁止事项
+- ❌ 不要直接编写代码，必须先给出设计方案
+- ❌ 不要修改现有的代码格式和风格
+- ❌ 不要进行过度的架构设计
+- ❌ 不要使用原生CSS，只使用TailwindCSS
+- ❌ 不要忽略TypeScript类型检查
+- ❌ 不要在渲染进程中直接使用Node.js API
+- ❌ 不要硬编码文本，必须使用国际化
+
+## 特殊要求
+- 所有用户界面文本支持国际化（中英文）
+- 考虑Electron应用的跨平台兼容性
+- 注意主进程和渲染进程的安全边界
+- 保持与现有Provider模式的一致性
+- 遵循现有的数据库表结构和字段命名
+- 保持与现有UI组件库（Radix Vue）的使用方式一致
+
+## 响应模板
+当收到开发任务时，请按以下格式回复：
+
+### 🎯 需求分析
+[分析用户需求和技术要点]
+
+### 📋 设计方案
+[详细的技术实现方案]
+
+### 💻 伪代码
+[关键逻辑的伪代码实现]
+
+### ❓ 确认要点
+[需要用户确认的关键决策点]
+
+**请确认以上设计方案后，我再开始编写具体代码。**
+
+## 常用模式参考
+
+### Vue组件模板
+```vue
+<template>
+  <div class="组件根元素的TailwindCSS类">
+    <!-- 使用国际化文本 -->
+    <h1>{{ $t('section.title') }}</h1>
+    <!-- 条件渲染 -->
+    <div v-if="condition" :class="dynamicClasses">
+      <!-- 内容 -->
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+// 国际化
+const { t } = useI18n()
+
+// 接口定义
+interface Props {
+  title?: string;
+  disabled?: boolean;
+}
+
+// Props和默认值
+const props = withDefaults(defineProps<Props>(), {
+  disabled: false
+})
+
+// 事件定义
+interface Emits {
+  (e: 'update', value: string): void;
+  (e: 'submit'): void;
+}
+const emits = defineEmits<Emits>()
+
+// 响应式数据
+const loading = ref(false)
+
+// 计算属性
+const dynamicClasses = computed(() => ({
+  'opacity-50': props.disabled,
+  'cursor-not-allowed': props.disabled
+}))
+
+// 事件处理函数
+const handleSubmit = () => {
+  if (!props.disabled) {
+    emits('submit')
+  }
+}
+</script>
+```
+
+### Provider类模板
+```typescript
+import { BaseProvider } from './BaseProvider'
+import { ChatMessageProps, UniversalChunkProps } from '../types'
+
+export class CustomProvider extends BaseProvider {
+  private client: any;
+  
+  constructor(apiKey: string, baseURL?: string) {
+    super()
+    // 初始化客户端
+  }
+
+  async chat(messages: ChatMessageProps[], model: string) {
+    // 实现聊天功能
+  }
+
+  async testConnection(): Promise<{ success: boolean; message: string }> {
+    try {
+      // 测试连接逻辑
+      return {
+        success: true,
+        message: '连接成功！'
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: `连接失败：${error.message || '未知错误'}`
+      };
+    }
+  }
+
+  protected transformResponse(chunk: any): UniversalChunkProps {
+    // 响应格式转换
+  }
+}
+```
+```
+
+现在 `.cursorrules` 文件已经完整了，包含了：
+
+1. **完整的项目结构说明**
+2. **Provider模式规范**
+3. **国际化规范**
+4. **数据库规范**
+5. **IPC通信规范**
+6. **常用模式参考**（Vue组件和Provider类模板）
+7. **更详细的禁止事项和特殊要求**
