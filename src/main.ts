@@ -7,6 +7,7 @@ import fs from 'node:fs/promises'
 import * as url from 'node:url'
 import { createProvider } from './providers/createProvider'
 import { systemConfig } from './utils'
+import { createMenu, updateMenu } from "./menu";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -56,6 +57,9 @@ const createWindow = async () => {
     // vibrancy: 'under-window',
     // visualEffectState: 'active',
   })
+
+  createMenu(mainWindow)
+
 
   protocol.handle('tyler-file', async (req) => {
     console.log('tyler-file::req', req)
@@ -121,6 +125,9 @@ const createWindow = async () => {
   })
 
   ipcMain.handle('update-config', async (event, newConfig: AppConfig) => {
+    if (newConfig.language) {
+      updateMenu(mainWindow)
+    }
     return await systemConfig.update(newConfig)
   })
 

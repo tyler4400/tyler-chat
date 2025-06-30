@@ -15,6 +15,8 @@ export interface IElectronAPI {
   testProviderConnection: (providerName: ProviderName) => Promise<TestConnectionResult>
   downloadConfig: () => Promise<{ success: boolean; message?: string }>
   showNotification: (options: { title: string; body: string }) => void
+  onMenuNewConversation: (callback: () => void) => void;
+  onMenuOpenSettings: (callback: () => void) => void;
 }
 declare global {
   interface Window {

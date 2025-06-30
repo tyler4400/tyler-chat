@@ -34,7 +34,9 @@ import { useConversationStore } from './stores/useConversationStore'
 import { useProviderStore } from './stores/useProviderStore'
 import { useI18n } from 'vue-i18n'
 import { initLocale } from "./i18n"
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const { t } = useI18n()
 const conversationStore = useConversationStore()
 const providerStore = useProviderStore()
@@ -43,5 +45,14 @@ onMounted(async () => {
   await initLocale()
   await providerStore.init()
   await conversationStore.fetchConversations()
+})
+
+// 监听菜单事件
+window.electronAPI.onMenuNewConversation(() => {
+  router.push('/')
+})
+
+window.electronAPI.onMenuOpenSettings(() => {
+  router.push('/settings')
 })
 </script>

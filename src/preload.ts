@@ -24,4 +24,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.invoke('download-config'),
   showNotification: (options: { title: string; body: string }) =>
     ipcRenderer.send('show-notification', options),
+  onMenuNewConversation: (callback: () => void) => ipcRenderer.on('menu-new-conversation', () => callback()),
+  onMenuOpenSettings: (callback: () => void) => ipcRenderer.on('menu-open-settings', () => callback()),
+
 })
