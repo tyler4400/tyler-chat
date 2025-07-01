@@ -26,5 +26,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.send('show-notification', options),
   onMenuNewConversation: (callback: () => void) => ipcRenderer.on('menu-new-conversation', () => callback()),
   onMenuOpenSettings: (callback: () => void) => ipcRenderer.on('menu-open-settings', () => callback()),
-
+  showContextMenu: (id: number) => ipcRenderer.send('show-context-menu', id),
+  onDeleteMessage: (callback: (id: number) => void) => ipcRenderer.on('delete-message', (_event, id) => callback(id)),
 })

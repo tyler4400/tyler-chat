@@ -11,6 +11,11 @@ export const useMessage = (conversationId: Ref<number>) => {
 		messages.value = await db.messages.where({ conversationId: conversationId.value }).toArray()
 	}
 
+	const deleteMessage = async (id: number) => {
+		await db.messages.delete(id)
+		await fetchMessages()
+	}
+
 	watch(conversationId, async () => await fetchMessages(), { immediate: true})
 
 	const createMessage = async (message: Omit<MessageProps, 'id' | 'createdAt' | 'updatedAt'>) => {
@@ -65,6 +70,7 @@ export const useMessage = (conversationId: Ref<number>) => {
 
 	return {
 		messages,
+		deleteMessage,
 		fetchMessages,
 		createMessage,
 		updateStreamMessage,

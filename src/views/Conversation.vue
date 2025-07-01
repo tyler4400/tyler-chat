@@ -40,7 +40,7 @@ const providerStore = useProviderStore()
 const conversationStore = useConversationStore()
 const currentConversation = computed(() => conversationStore.getConversationById(conversationId.value))
 
-const { messages, updateStreamMessage, createMessage } = useMessage(conversationId)
+const { messages, updateStreamMessage, createMessage, deleteMessage } = useMessage(conversationId)
 
 const sentMessages = computed<SendMsg[]>(() => messages.value
     .filter(message => message.status !== 'loading')
@@ -91,7 +91,10 @@ onMounted(async () => {
   if (initMessageId.value) {
     await getAnswerMsg()
   }
+
+  // 这两个注册事件应该在组件卸载的时候清除
   window.electronAPI.onUpdateMessage(updateStreamMessage)
+  window.electronAPI.onDeleteMessage(deleteMessage)
 })
 
 watch(messages, async () => {

@@ -25,6 +25,10 @@ export default {
   provider: {
     selectModel: 'Select a model...',
   },
+  contextMenu: {
+    deleteConversation: 'Delete Conversation',
+    deleteMessage: 'Delete Message',
+  },
   menu: {
     app: {
       newConversation: 'New Conversation',

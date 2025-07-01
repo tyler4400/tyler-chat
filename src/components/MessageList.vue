@@ -4,10 +4,14 @@ import { Icon } from '@iconify/vue'
 import dayjs from "dayjs";
 import VueMarkdown from "vue-markdown-render";
 import markdownItHighlightjs from "markdown-it-highlightjs";
-import { useTemplateRef } from "vue";
+import { onMounted, useTemplateRef } from "vue";
 
 const listRef = useTemplateRef<HTMLDivElement>('listRef')
 defineProps<{ messages?: MessageProps[] }>()
+
+const showContextMenu = (id: number) => {
+  window.electronAPI.showContextMenu(id)
+}
 
 defineExpose<MessageListInstance>({
   scrollIntoView: () => {
@@ -45,6 +49,7 @@ defineExpose<MessageListInstance>({
       :key="message.id"
       class="message-item mb-3 flex"
       :class="message.type === 'question' ? 'justify-end' : 'justify-start'"
+      @contextmenu.prevent="showContextMenu(message.id)"
     >
       <div>
         <div  class="text-xs text-gray-500" :class="{'text-right': message.type === 'question'}">

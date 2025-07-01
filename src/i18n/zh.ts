@@ -25,6 +25,10 @@ export default {
   provider: {
     selectModel: '选择模型...',
   },
+  contextMenu: {
+    deleteConversation: '删除会话',
+    deleteMessage: '删除此信息',
+  },
   menu: {
     app: {
       newConversation: '新建对话',

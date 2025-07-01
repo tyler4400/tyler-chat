@@ -7,7 +7,7 @@ import fs from 'node:fs/promises'
 import * as url from 'node:url'
 import { createProvider } from './providers/createProvider'
 import { systemConfig } from './utils'
-import { createMenu, updateMenu } from "./menu";
+import { createMenu, updateMenu, createContextMenu } from "./menu";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -189,6 +189,12 @@ const createWindow = async () => {
       title,
       body,
     }).show()
+  })
+
+  ipcMain.on('show-context-menu', async (event, id) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
+    if (!win) return
+    await createContextMenu(win, id)
   })
 
   // and load the index.html of the app.

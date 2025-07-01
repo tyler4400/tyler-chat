@@ -17,6 +17,8 @@ export interface IElectronAPI {
   showNotification: (options: { title: string; body: string }) => void
   onMenuNewConversation: (callback: () => void) => void;
   onMenuOpenSettings: (callback: () => void) => void;
+  showContextMenu: (id: number) => void;
+  onDeleteMessage: (callback: (id: number) => void) => void;
 }
 declare global {
   interface Window {

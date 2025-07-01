@@ -12,7 +12,34 @@ const messages: Record<string, MessageSchema> = {
   zh
 }
 
-const createMenu = async (mainWindow: BrowserWindow, language?: LanguageType) => {
+// 创建一个通用的翻译函数
+const createTranslator = async () => {
+  const config = await systemConfig.load()
+  return (key: string) => {
+    const keys = key.split('.')
+    let result: any = messages[config.language]
+    for (const k of keys) {
+      result = result[k]
+    }
+    return result as string
+  }
+}
+
+export const createContextMenu = async (win: BrowserWindow, id: number) => {
+  const t = await createTranslator()
+  const template = [
+    {
+      label: t('contextMenu.deleteMessage'),
+      click: () => {
+        win.webContents.send('delete-message', id)
+      }
+    }
+  ]
+  const menu = Menu.buildFromTemplate(template)
+  menu.popup({ window: win })
+}
+
+export const createMenu = async (mainWindow: BrowserWindow, language?: LanguageType) => {
   let lan = language
   if (!lan) {
     lan = (await systemConfig.load()).language
@@ -180,8 +207,7 @@ const createMenu = async (mainWindow: BrowserWindow, language?: LanguageType) =>
 }
 
 // 导出一个更新菜单的函数，在语言改变时调用
-const updateMenu = (mainWindow: BrowserWindow, language?: LanguageType) => {
+export const updateMenu = (mainWindow: BrowserWindow, language?: LanguageType) => {
   createMenu(mainWindow, language)
 }
 
-export { createMenu, updateMenu }
