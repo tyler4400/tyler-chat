@@ -126,7 +126,7 @@ const createWindow = async () => {
 
   ipcMain.handle('update-config', async (event, newConfig: AppConfig) => {
     if (newConfig.language) {
-      updateMenu(mainWindow)
+      updateMenu(mainWindow, newConfig.language)
     }
     return await systemConfig.update(newConfig)
   })
