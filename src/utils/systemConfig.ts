@@ -28,6 +28,7 @@ const configPath = path.join(app.getPath('userData'), 'config.json')
 
 export const systemConfig = {
 	async load(): Promise<AppConfig> {
+		console.log('配置存储地址', configPath)
 		const [data, error] = await tryCatch(fs.readFile(configPath, 'utf-8'))
 		if (error) {
 			console.error('error', error)
