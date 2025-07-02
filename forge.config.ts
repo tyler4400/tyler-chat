@@ -1,24 +1,45 @@
 import type { ForgeConfig } from '@electron-forge/shared-types';
-import { MakerSquirrel } from '@electron-forge/maker-squirrel';
+// import { MakerSquirrel } from '@electron-forge/maker-squirrel';
 import { MakerZIP } from '@electron-forge/maker-zip';
-import { MakerDeb } from '@electron-forge/maker-deb';
-import { MakerRpm } from '@electron-forge/maker-rpm';
+// import { MakerDeb } from '@electron-forge/maker-deb';
+import { MakerDMG } from '@electron-forge/maker-dmg';
+// import { MakerRpm } from '@electron-forge/maker-rpm';
 import { VitePlugin } from '@electron-forge/plugin-vite';
 import { FusesPlugin } from '@electron-forge/plugin-fuses';
 import { FuseV1Options, FuseVersion } from '@electron/fuses';
+import { defineConfig } from 'vite';
 
 const config: ForgeConfig = {
   packagerConfig: {
-    name:'TChat',
+    // name:'TChat',
     icon: './assets/icon',
     asar: true,
   },
   rebuildConfig: {},
   makers: [
-    new MakerSquirrel({}),
+    // new MakerSquirrel({}),
+    // new MakerZIP({}, ['darwin']),
+    // new MakerRpm({}),
+    // new MakerDeb({})
+
+    // new MakerSquirrel({
+    //   // 应用信息
+    //   name: 'VChat',
+    //   authors: 'Viking Zhang',
+    //   description: 'A chat application',
+    //   // 安装程序配置
+    //   setupIcon: './assets/icon.ico',  // Windows 安装图标
+    //   iconUrl: 'https://raw.githubusercontent.com/your-repo/vchat/main/assets/icon.ico', // 远程图标URL
+    //   // 快捷方式设置
+    //   setupExe: 'VChat-Setup.exe',  // 安装程序名称
+    // }),
+    // new MakerRpm({}),
+    // new MakerDeb({}),
+    new MakerDMG({
+      icon: './assets/icon.icns',
+      format: 'ULFO',
+    }),
     new MakerZIP({}, ['darwin']),
-    new MakerRpm({}),
-    new MakerDeb({})
   ],
   plugins: [
     new VitePlugin({
@@ -58,4 +79,4 @@ const config: ForgeConfig = {
   ],
 };
 
-export default config;
+export default defineConfig(config);

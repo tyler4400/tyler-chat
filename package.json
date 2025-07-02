@@ -8,6 +8,7 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
+    "make:dmg": "cross-env ELECTRON_FORGE_ALLOW_OPENFOLDER_SKIP=true electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx ."
   },
@@ -50,6 +51,7 @@
   },
   "dependencies": {
     "@baiducloud/qianfan": "^0.2.3",
+    "@electron-forge/maker-dmg": "^7.8.1",
     "dayjs": "^1.11.13",
     "dexie": "^4.0.11",
     "dotenv": "^16.5.0",
