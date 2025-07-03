@@ -3,6 +3,7 @@ import type { ForgeConfig } from '@electron-forge/shared-types';
 import { MakerZIP } from '@electron-forge/maker-zip';
 // import { MakerDeb } from '@electron-forge/maker-deb';
 import { MakerDMG } from '@electron-forge/maker-dmg';
+import { MakerPKG } from '@electron-forge/maker-pkg';
 // import { MakerRpm } from '@electron-forge/maker-rpm';
 import { VitePlugin } from '@electron-forge/plugin-vite';
 import { FusesPlugin } from '@electron-forge/plugin-fuses';
@@ -35,10 +36,20 @@ const config: ForgeConfig = {
     // }),
     // new MakerRpm({}),
     // new MakerDeb({}),
-    new MakerDMG({
-      icon: './assets/icon.icns',
-      format: 'ULFO',
-    }),
+    
+    // 暂时禁用 DMG 构建，因为在 Apple Silicon 上有 openfolder 问题
+    // 参考：https://github.com/electron/forge/issues/2831
+    // new MakerDMG({
+    //   icon: './assets/icon.icns',
+    //   format: 'UDZO',
+    // }),
+    
+    // 使用 PKG 作为 DMG 的替代方案（需要代码签名证书，暂时禁用）
+    // new MakerPKG({
+    //   // PKG 构建不会遇到 openfolder 问题，但需要代码签名
+    // }),
+    
+    // 使用 ZIP 作为主要的分发选项（在 Apple Silicon 上可以正常工作）
     new MakerZIP({}, ['darwin']),
   ],
   plugins: [
