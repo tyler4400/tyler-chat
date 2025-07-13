@@ -5,7 +5,9 @@
 ## 📷 应用截图
 
 <!-- 截图将在后续添加 -->
-_截图即将更新..._
+<img width="1100" height="768" alt="image" src="https://github.com/user-attachments/assets/6a7139b8-9887-443e-bda3-b19128141b14" />
+<img width="1100" height="768" alt="image" src="https://github.com/user-attachments/assets/2e89378b-335a-4af3-b73e-0d62e99c15c9" />
+<img width="1100" height="768" alt="image" src="https://github.com/user-attachments/assets/a560856c-8f1d-42e7-a825-e158e0d0acaa" />
 
 ## ✨ 功能特性
 
