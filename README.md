@@ -278,7 +278,7 @@ npm run make:dmg
 ## 📮 联系方式
 
 - **作者**: tyler4400
-- **邮箱**: tyler4400@foxmail.com
+- **GitHub**: [tyler4400](https://github.com/tyler4400)
 
 ---
 
